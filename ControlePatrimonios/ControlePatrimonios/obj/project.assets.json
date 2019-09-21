@@ -12581,11 +12581,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Giovanne Prestes\\Desktop\\ControlePatrimonio\\ControlePatrimonios\\ControlePatrimonios\\ControlePatrimonios.csproj",
+      "projectUniqueName": "C:\\Users\\Giovanne Prestes\\Desktop\\Pa6\\ControlePatrimonios\\ControlePatrimonios\\ControlePatrimonios.csproj",
       "projectName": "ControlePatrimonios",
-      "projectPath": "C:\\Users\\Giovanne Prestes\\Desktop\\ControlePatrimonio\\ControlePatrimonios\\ControlePatrimonios\\ControlePatrimonios.csproj",
+      "projectPath": "C:\\Users\\Giovanne Prestes\\Desktop\\Pa6\\ControlePatrimonios\\ControlePatrimonios\\ControlePatrimonios.csproj",
       "packagesPath": "C:\\Users\\Giovanne Prestes\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Giovanne Prestes\\Desktop\\ControlePatrimonio\\ControlePatrimonios\\ControlePatrimonios\\obj\\",
+      "outputPath": "C:\\Users\\Giovanne Prestes\\Desktop\\Pa6\\ControlePatrimonios\\ControlePatrimonios\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
