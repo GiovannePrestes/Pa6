@@ -1,0 +1,47 @@
+﻿@model IEnumerable<ControlePatrimonios.Models.TbEncerramento>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DataEncerramento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Motivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdItemNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataEncerramento)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Motivo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdItemNavigation.Descricao)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdEncerramento">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdEncerramento">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdEncerramento">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

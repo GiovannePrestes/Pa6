@@ -1,0 +1,60 @@
+﻿@model ControlePatrimonios.Models.TbItem
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>TbItem</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Patrimonio)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Patrimonio)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ServiceTag)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ServiceTag)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Descricao)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DataCriacao)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DataCriacao)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IdEstadoNavigation)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdEstadoNavigation.DescricaoEstado)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IdSetorNavigation)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdSetorNavigation.NomeSetor)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IdTipoNavigation)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdTipoNavigation.DescricaoTipo)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.IdItem">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

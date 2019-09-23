@@ -1,37 +1,35 @@
 ﻿@model IEnumerable<ControlePatrimonios.Models.TbBloco>
+
 @{
-    ViewData["Title"] = "Blocos";
+    ViewData["Title"] = "Index";
 }
-<div>
-    <br/>
-    <br/>
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.IdBloco)</th>
-                <th>@Html.DisplayNameFor(model => model.NomeBloco)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IdBloco)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NomeBloco)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.IdBloco">Edit</a>
-                        <a asp-action="Details" asp-route-id="@item.IdBloco">Details</a>
-                        <a asp-action="Delete" asp-route-id="@item.IdBloco">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NomeBloco)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NomeBloco)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdBloco">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdBloco">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdBloco">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ControlePatrimonios.Models
 {
@@ -11,6 +12,8 @@ namespace ControlePatrimonios.Models
         }
 
         public int IdEstado { get; set; }
+        [Required]
+        [Display(Name = "Descrição do Estado")]
         public string DescricaoEstado { get; set; }
 
         public ICollection<TbItem> TbItem { get; set; }

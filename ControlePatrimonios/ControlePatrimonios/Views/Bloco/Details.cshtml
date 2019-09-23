@@ -1,0 +1,24 @@
+﻿@model ControlePatrimonios.Models.TbBloco
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>TbBloco</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.NomeBloco)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NomeBloco)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.IdBloco">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
