@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ControlePatrimonios.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ControlePatrimonios.Controllers
 {
+    [Authorize]
     public class EncerramentoController : Controller
     {
         private readonly ControlePatrimoniosContext _context = new ControlePatrimoniosContext();        
