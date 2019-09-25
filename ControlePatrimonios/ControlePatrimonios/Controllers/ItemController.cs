@@ -61,6 +61,7 @@ namespace ControlePatrimonios.Controllers
         {
             if (ModelState.IsValid)
             {
+                tbItem.DataCriacao = DateTime.Now;
                 _context.Add(tbItem);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

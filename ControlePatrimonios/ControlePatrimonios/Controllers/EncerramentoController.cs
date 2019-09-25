@@ -57,6 +57,7 @@ namespace ControlePatrimonios.Controllers
         {
             if (ModelState.IsValid)
             {
+                tbEncerramento.DataEncerramento = DateTime.Now;
                 _context.Add(tbEncerramento);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

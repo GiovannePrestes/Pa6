@@ -10,10 +10,12 @@ namespace ControlePatrimonios.Models
         {
             TbEncerramento = new HashSet<TbEncerramento>();
         }
-
         public int IdItem { get; set; }
+        [Required]
         public int IdSetor { get; set; }
+        [Required]
         public int IdTipo { get; set; }
+        [Required]
         public int IdEstado { get; set; }
         [Required]
         [DisplayFormat(DataFormatString = "{0:000000}")]

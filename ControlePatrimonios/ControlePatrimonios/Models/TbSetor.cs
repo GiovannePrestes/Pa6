@@ -10,11 +10,12 @@ namespace ControlePatrimonios.Models
         {
             TbItem = new HashSet<TbItem>();
         }
-
+        
         public int IdSetor { get; set; }
         [Required]
         [Display(Name = "Nome do Setor")]
         public string NomeSetor { get; set; }
+        [Required]
         public int IdBloco { get; set; }
 
         [Required]

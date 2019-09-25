@@ -7,6 +7,7 @@ namespace ControlePatrimonios.Models
     public partial class TbEncerramento
     {
         public int IdEncerramento { get; set; }
+        [Required]
         public int IdItem { get; set; }
         [Required]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]

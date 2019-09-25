@@ -11,6 +11,7 @@ namespace ControlePatrimonios.Models
             TbItem = new HashSet<TbItem>();
         }
 
+        [Required]
         public int IdTipo { get; set; }
         [Required]
         [Display(Name = "Descrição do Tipo")]
