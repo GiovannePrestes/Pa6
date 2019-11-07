@@ -75,7 +75,6 @@ C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\bi
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\bin\Debug\netcoreapp2.1\ControlePatrimonios.Views.dll
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\bin\Debug\netcoreapp2.1\ControlePatrimonios.Views.pdb
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\ControlePatrimonios.csprojAssemblyReference.cache
-C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\ControlePatrimonios.csproj.CoreCompileInputs.cache
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\ControlePatrimonios.RazorAssemblyInfo.cache
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\ControlePatrimonios.RazorAssemblyInfo.cs
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs

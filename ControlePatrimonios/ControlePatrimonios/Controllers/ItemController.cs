@@ -16,10 +16,15 @@ namespace ControlePatrimonios.Controllers
         private readonly ControlePatrimoniosContext _context = new ControlePatrimoniosContext();
         
         // GET: Item
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var controlePatrimoniosContext = _context.TbItem.Include(t => t.IdEstadoNavigation).Include(t => t.IdSetorNavigation).Include(t => t.IdTipoNavigation);
-            return View(await controlePatrimoniosContext.ToListAsync());
+            //var controlePatrimoniosContext = _context.TbItem.Include(t => t.IdEstadoNavigation).Include(t => t.IdSetorNavigation).Include(t => t.IdTipoNavigation);
+            var itens = from a in _context.TbItem.Include(t => t.IdEstadoNavigation).Include(t => t.IdSetorNavigation).Include(t => t.IdTipoNavigation) select a;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                itens = itens.Where(s => s.Descricao.Contains(searchString));
+            }
+            return View(await itens.ToListAsync());
         }
 
         // GET: Item/Details/5
