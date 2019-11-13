@@ -36,7 +36,7 @@ namespace ControlePatrimonios.Controllers
                 return NotFound();
             }
 
-            return View(tbBloco);
+            return Json(new { success = true, message = tbBloco.NomeBloco});
         }
 
         // GET: Bloco/Create

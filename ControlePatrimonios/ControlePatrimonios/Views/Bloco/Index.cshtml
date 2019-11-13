@@ -25,11 +25,33 @@
                 @Html.DisplayFor(modelItem => item.NomeBloco)
             </td>
             <td>
+                @*<input id="idBloco" hidden value="@item.IdBloco"/>*@
                 <a asp-action="Edit" asp-route-id="@item.IdBloco">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.IdBloco">Detalhes</a> |
+                @*<a asp-action="Details" asp-route-id="@item.IdBloco" onclick="Details()">Detalhes</a> |*@
+                <button id="details">Details</button> |
                 <a asp-action="Delete" asp-route-id="@item.IdBloco">Excluir</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<script>
+    $("details").click(function () {
+        $.get("./Bloco/Details",
+            {
+                id: 1
+            })
+            .done(function (result)
+            {
+                if (result.success)
+                    swal({
+                        title: "Nome do Bloco - " + result.message,
+                        icon: "success"
+                    });
+            });
+    });
+    function Details() {
+        swal("Good job!", "You clicked the button!", "success");
+    }
+</script>

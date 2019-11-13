@@ -54,15 +54,15 @@
             },
             "Microsoft.AspNetCore.Razor.Language": {
               "target": "Package",
-              "version": "[3.0.0, )"
+              "version": "[2.2.0, )"
             },
             "Microsoft.EntityFrameworkCore.Abstractions": {
               "target": "Package",
-              "version": "[3.0.0, )"
+              "version": "[2.2.6, )"
             },
             "Microsoft.NET.Sdk.Razor": {
               "target": "Package",
-              "version": "[3.0.0, )"
+              "version": "[2.2.0, )"
             },
             "Microsoft.NETCore.App": {
               "suppressParent": "All",
@@ -72,11 +72,11 @@
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[3.0.0, )"
+              "version": "[2.1.9, )"
             },
             "System.Data.SqlClient": {
               "target": "Package",
-              "version": "[4.7.0, )"
+              "version": "[4.6.1, )"
             }
           },
           "imports": [

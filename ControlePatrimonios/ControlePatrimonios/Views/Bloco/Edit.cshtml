@@ -19,6 +19,7 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Salvar" class="btn btn-default" />
+                <button onclick="Chama()">Butao</button>
             </div>
         </form>
     </div>
@@ -27,6 +28,29 @@
 <div>
     <a asp-action="Index">Voltar para a lista</a>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script>
+    function Chama() {
+        //alert("alo");
+
+        //swal({
+        //    title: "Ajax request example",
+        //    text: "Submit to run ajax request",
+        //    type: "info",
+        //    showCancelButton: true,
+        //    closeOnConfirm: false,
+        //    showLoaderOnConfirm: true
+        //}, function () {
+        //    setTimeout(function () {
+        //        swal("Ajax request finished!");
+        //    }, 2000);
+        //});
+        //window.swal({
+        //    title: "Alo",
+        //    icon: "success"
+        //})
+    }
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
