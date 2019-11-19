@@ -25,11 +25,9 @@
                 @Html.DisplayFor(modelItem => item.NomeBloco)
             </td>
             <td>
-                @*<input id="idBloco" hidden value="@item.IdBloco"/>*@
-                <a asp-action="Edit" asp-route-id="@item.IdBloco">Editar</a> |
-                @*<a asp-action="Details" asp-route-id="@item.IdBloco" onclick="Details()">Detalhes</a> |*@
-                <button id="details">Details</button> |
-                <a asp-action="Delete" asp-route-id="@item.IdBloco">Excluir</a>
+                <button onclick="Edit(@item.IdBloco)">Editar</button> |
+                <button onclick="Details(@item.IdBloco)">Detalhes</button> |
+                <button onclick="Delete(@item.IdBloco)">Excluir</button>
             </td>
         </tr>
 }
@@ -37,21 +35,62 @@
 </table>
 
 <script>
-    $("details").click(function () {
+    function Edit(BlocoId) {
         $.get("./Bloco/Details",
             {
-                id: 1
+                id: BlocoId
             })
-            .done(function (result)
-            {
+            .done(function (result) {
                 if (result.success)
                     swal({
                         title: "Nome do Bloco - " + result.message,
                         icon: "success"
                     });
             });
-    });
-    function Details() {
-        swal("Good job!", "You clicked the button!", "success");
+    }
+    function Details(BlocoId) {
+        $.get("./Bloco/Details",
+            {
+                id: BlocoId
+            })
+            .done(function (result) {
+                if (result.success)
+                    swal({
+                        title: "Nome do Bloco - " + result.message,
+                        icon: "success"
+                    });
+            });
+    }
+    function Delete(BlocoId) {
+        swal({
+            title: "Tem certeza?",
+            text: "Você irá excluir o Bloco " + BlocoId,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((excluir) => {
+            if (excluir) {
+                $.post("./Bloco/DeleteConfirmed",
+                    {
+                        id: BlocoId
+                    })
+                    .done(function (result) {
+                        if (result.success)
+                            swal({
+                                title: "Bloco " + result.message + " deletado com sucesso",
+                                icon: "success"
+                            });
+                        //fazer com que tenha algum delay aqui
+                        window.location.reload();
+                    })
+                    .fail(function () {
+                        swal("", "Algo deu errado", "error")
+                    });
+            } else {
+                swal("Bloco não deletado");
+            }
+        });
+        
     }
 </script>

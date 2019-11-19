@@ -14,7 +14,7 @@ namespace ControlePatrimonios.Controllers
     public class BlocoController : Controller
     {
         private readonly ControlePatrimoniosContext _context = new ControlePatrimoniosContext();
-        
+
         // GET: Bloco
         public async Task<IActionResult> Index()
         {
@@ -36,7 +36,7 @@ namespace ControlePatrimonios.Controllers
                 return NotFound();
             }
 
-            return Json(new { success = true, message = tbBloco.NomeBloco});
+            return Json(new { success = true, message = tbBloco.NomeBloco });
         }
 
         // GET: Bloco/Create
@@ -131,14 +131,13 @@ namespace ControlePatrimonios.Controllers
         }
 
         // POST: Bloco/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var tbBloco = await _context.TbBloco.FindAsync(id);
             _context.TbBloco.Remove(tbBloco);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = true, message = tbBloco.NomeBloco });
         }
 
         private bool TbBlocoExists(int id)

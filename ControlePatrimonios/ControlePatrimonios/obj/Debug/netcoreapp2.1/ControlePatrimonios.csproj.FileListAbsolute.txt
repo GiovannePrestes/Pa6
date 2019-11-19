@@ -163,5 +163,5 @@ C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\ob
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\Razor\Views\Encerramento\Details.g.cshtml.cs
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\Razor\Views\Encerramento\Edit.g.cshtml.cs
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\Razor\Views\Encerramento\Index.g.cshtml.cs
-C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\ControlePatrimonios.csproj.CoreCompileInputs.cache
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs
+C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\ControlePatrimonios.csproj.CoreCompileInputs.cache
