@@ -80,15 +80,15 @@
                             swal({
                                 title: "Bloco " + result.message + " deletado com sucesso",
                                 icon: "success"
+                            }).then(() => {
+                                window.location.reload();
                             });
-                        //fazer com que tenha algum delay aqui
-                        window.location.reload();
                     })
                     .fail(function () {
                         swal("", "Algo deu errado", "error")
                     });
             } else {
-                swal("Bloco não deletado");
+                swal({title: "Bloco " + BlocoId + " não deletado"});
             }
         });
         
