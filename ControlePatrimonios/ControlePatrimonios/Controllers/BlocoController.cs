@@ -113,22 +113,22 @@ namespace ControlePatrimonios.Controllers
         }
 
         // GET: Bloco/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var tbBloco = await _context.TbBloco
-                .FirstOrDefaultAsync(m => m.IdBloco == id);
-            if (tbBloco == null)
-            {
-                return NotFound();
-            }
+        //    var tbBloco = await _context.TbBloco
+        //        .FirstOrDefaultAsync(m => m.IdBloco == id);
+        //    if (tbBloco == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(tbBloco);
-        }
+        //    return View(tbBloco);
+        //}
 
         // POST: Bloco/Delete/5
         [HttpPost]
