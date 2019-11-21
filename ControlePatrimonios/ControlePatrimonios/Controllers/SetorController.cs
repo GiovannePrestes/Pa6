@@ -39,7 +39,12 @@ namespace ControlePatrimonios.Controllers
                 return NotFound();
             }
 
-            return View(tbSetor);
+            return Json(new {
+                            success = true,
+                            message = new {
+                                            nomeSetor = tbSetor.NomeSetor,
+                                            nomeBloco = tbSetor.IdBlocoNavigation.NomeBloco
+                                        } });
         }
 
         // GET: Setor/Create
@@ -120,38 +125,43 @@ namespace ControlePatrimonios.Controllers
         }
 
         // GET: Setor/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var tbSetor = await _context.TbSetor
-                .Include(t => t.IdBlocoNavigation)
-                .FirstOrDefaultAsync(m => m.IdSetor == id);
-            if (tbSetor == null)
-            {
-                return NotFound();
-            }
+        //    var tbSetor = await _context.TbSetor
+        //        .Include(t => t.IdBlocoNavigation)
+        //        .FirstOrDefaultAsync(m => m.IdSetor == id);
+        //    if (tbSetor == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(tbSetor);
-        }
+        //    return View(tbSetor);
+        //}
 
         // POST: Setor/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var tbSetor = await _context.TbSetor.FindAsync(id);
             _context.TbSetor.Remove(tbSetor);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = true, message = tbSetor.NomeSetor });
         }
 
         private bool TbSetorExists(int id)
         {
             return _context.TbSetor.Any(e => e.IdSetor == id);
+        }
+
+        public async Task<IActionResult> GetNomeSetor(int id)
+        {
+            var tbSetor = await _context.TbSetor.FindAsync(id);
+            return Json(new { message = tbSetor.NomeSetor });
         }
     }
 }

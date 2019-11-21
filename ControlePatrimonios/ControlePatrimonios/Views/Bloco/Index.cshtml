@@ -35,19 +35,19 @@
 </table>
 
 <script>
-    function Edit(BlocoId) {
-        $.get("./Bloco/Details",
-            {
-                id: BlocoId
-            })
-            .done(function (result) {
-                if (result.success)
-                    swal({
-                        title: "Nome do Bloco - " + result.message,
-                        icon: "success"
-                    });
-            });
-    }
+    //function Edit(BlocoId) {
+    //    $.get("./Bloco/Details",
+    //        {
+    //            id: BlocoId
+    //        })
+    //        .done(function (result) {
+    //            if (result.success)
+    //                swal({
+    //                    title: "Nome do Bloco - " + result.message,
+    //                    icon: "success"
+    //                });
+    //        });
+    //}
     function Details(BlocoId) {
         $.get("./Bloco/Details",
             {
@@ -56,7 +56,8 @@
             .done(function (result) {
                 if (result.success)
                     swal({
-                        title: "Nome do Bloco - " + result.message,
+                        title: "Detalhes",
+                        text: "Nome do Bloco: " + result.message,
                         icon: "success"
                     });
             });

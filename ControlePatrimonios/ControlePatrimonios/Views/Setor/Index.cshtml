@@ -22,20 +22,85 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.NomeSetor)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdBlocoNavigation.NomeBloco)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdSetor">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdSetor">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdSetor">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomeSetor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdBlocoNavigation.NomeBloco)
+                </td>
+                <td>
+                    <button onclick="Edit(@item.IdSetor)">Editar</button> |
+                    <button onclick="Details(@item.IdSetor)">Detalhes</button> |
+                    <button onclick="Delete(@item.IdSetor)">Excluir</button>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<script>
+
+
+    function Details(SetorId) {
+        $.get("./Setor/Details",
+            {
+                id: SetorId
+            })
+            .done(function (result) {
+                if (result.success)
+                    swal({
+                        title: "Detalhes",
+                        text: "Setor: " + result.message.nomeSetor + 
+                            "\nBloco: " + result.message.nomeBloco,
+                        icon: "success"
+                    });
+            });
+    }
+
+
+    function Delete(SetorId) {
+        $.get("./Setor/GetNomeSetor",
+            {
+                id: SetorId
+            })
+            .done(function (resultNomeSetor) {
+                swal({
+                    title: "Tem certeza?",
+                    text: "Você irá excluir o Setor: " + resultNomeSetor.message,
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    buttons: ["Não", "Sim"],
+                })
+                .then((excluir) => {
+                    if (excluir) {
+                        $.post("./Setor/DeleteConfirmed",
+                            {
+                                id: SetorId
+                            })
+                            .done(function (result) {
+                                if (result.success)
+                                    swal({
+                                        title: "Bloco " + result.message + " deletado com sucesso",
+                                        icon: "success"
+                                    }).then(() => {
+                                        window.location.reload();
+                                    });
+                            })
+                            .fail(function () {
+                                swal("Ooops!", "Algo deu errado", "error")
+                            });
+                    } else {
+                        swal({text: "Bloco " + resultNomeSetor.message + " não foi deletado" });
+                    }
+                });
+            });
+
+    }
+
+
+</script>
+
