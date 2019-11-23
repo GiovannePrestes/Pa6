@@ -7,7 +7,7 @@
 <div class="center">
     <div class="row">
         <div class="col-md-offset-4 col-md-4" style="border: 3px solid #383838">
-            <h2 style="text-align:center">@ViewData["Title"]</h2>
+            <h2 class="text-primary">@ViewData["Title"]</h2>
             <section>
                 <form method="post">
                     <hr />
@@ -34,7 +34,7 @@
                         </p>
                     </div>
                     <div class="form-group" align="right" style="padding: 5px">
-                        <button type="submit" class="btn btn-default">Entrar</button>
+                        <button type="submit" class="btn btn-primary">Entrar</button>
                     </div>
                     <div class="form-group">
                         <p>
@@ -47,16 +47,6 @@
     </div>
 </div>
 
-
-<style>
-    body {
-        background-image: url("/images/cinza4k.jpg");
-        background-size: cover;
-    }
-    .center {
-        padding: 70px 0;
-    }
-</style>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

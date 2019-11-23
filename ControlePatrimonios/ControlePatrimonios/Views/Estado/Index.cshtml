@@ -1,35 +1,102 @@
 ﻿@model IEnumerable<ControlePatrimonios.Models.TbEstado>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Estados";
 }
 
-<h2>Index</h2>
+<h2>Estados</h2>
+<div class="row">
+    <div class="col-md-offset-2 col-md-8">
+        <div align="right">
+            <button class="btn btn-primary" onclick="onClickCriar()">Criar novo estado</button>
+        </div>
+        <hr />
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr class="bg-primary">
+                    <th>
+                        @Html.DisplayNameFor(model => model.DescricaoEstado)
+                    </th>
+                    <th width="275"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DescricaoEstado)
+                        </td>
+                        <td align="right">
+                            <button class="btn" onclick="Edit(@item.IdEstado)">Editar</button> |
+                            <button class="btn" onclick="Details(@item.IdEstado)">Detalhes</button> |
+                            <button class="btn" onclick="Delete(@item.IdEstado)">Excluir</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DescricaoEstado)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DescricaoEstado)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdEstado">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdEstado">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdEstado">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<script>
+    function onClickCriar() {
+        window.location.href = "./Estado/Create";
+    }
+    function Edit(EstadoId) {
+        window.location.href = "./Estado/Edit/" + EstadoId;
+    }
+    function Details(EstadoId) {
+        $.get("./Estado/Details",
+            {
+                id: EstadoId
+            })
+            .done(function (result) {
+                if (result.success)
+                    swal({
+                        title: "Detalhes",
+                        text: "Descrição do Estado: " + result.message,
+                        icon: "success"
+                    });
+            });
+    }
+    function Delete(EstadoId) {
+        $.get("./Estado/GetDescricaoEstadoById",
+            {
+                id: EstadoId
+            })
+            .done(function (resultNomeEstado) {
+                swal({
+                    title: "Tem certeza?",
+                    text: "Você irá excluir o Estado: '" + resultNomeEstado.message + "'",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((excluir) => {
+                    if (excluir) {
+                        $.post("./Estado/DeleteConfirmed",
+                            {
+                                id: EstadoId
+                            })
+                            .done(function (result) {
+                                if (result.success)
+                                    swal({
+                                        title: "Estado '" + result.message + "' deletado com sucesso",
+                                        icon: "success"
+                                    }).then(() => {
+                                        window.location.reload();
+                                    });
+                            })
+                            .fail(function () {
+                                swal("", "Algo deu errado", "error")
+                            });
+                    } else {
+                        swal({ title: "Estado: '" + resultNomeEstado.message + "' não deletado"});
+                    }
+                });
+            });
+
+    }
+</script>

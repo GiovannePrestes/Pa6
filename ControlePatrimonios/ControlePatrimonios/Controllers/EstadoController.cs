@@ -15,14 +15,12 @@ namespace ControlePatrimonios.Controllers
     {
         private readonly ControlePatrimoniosContext _context = new ControlePatrimoniosContext();
         
-
-        // GET: Estado
+        
         public async Task<IActionResult> Index()
         {
             return View(await _context.TbEstado.ToListAsync());
         }
-
-        // GET: Estado/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -37,18 +35,13 @@ namespace ControlePatrimonios.Controllers
                 return NotFound();
             }
 
-            return View(tbEstado);
+            return Json(new { success = true, message = tbEstado.DescricaoEstado });
         }
-
-        // GET: Estado/Create
+        
         public IActionResult Create()
         {
             return View();
         }
-
-        // POST: Estado/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdEstado,DescricaoEstado")] TbEstado tbEstado)
@@ -61,8 +54,7 @@ namespace ControlePatrimonios.Controllers
             }
             return View(tbEstado);
         }
-
-        // GET: Estado/Edit/5
+        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,10 +69,7 @@ namespace ControlePatrimonios.Controllers
             }
             return View(tbEstado);
         }
-
-        // POST: Estado/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdEstado,DescricaoEstado")] TbEstado tbEstado)
@@ -112,39 +101,25 @@ namespace ControlePatrimonios.Controllers
             }
             return View(tbEstado);
         }
-
-        // GET: Estado/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var tbEstado = await _context.TbEstado
-                .FirstOrDefaultAsync(m => m.IdEstado == id);
-            if (tbEstado == null)
-            {
-                return NotFound();
-            }
-
-            return View(tbEstado);
-        }
-
-        // POST: Estado/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        
+        [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var tbEstado = await _context.TbEstado.FindAsync(id);
             _context.TbEstado.Remove(tbEstado);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = true, message = tbEstado.DescricaoEstado });
         }
 
         private bool TbEstadoExists(int id)
         {
             return _context.TbEstado.Any(e => e.IdEstado == id);
+        }
+
+        public async Task<IActionResult> GetDescricaoEstadoById(int id)
+        {
+            var tbEstado = await _context.TbEstado.FindAsync(id);
+            return Json(new { message = tbEstado.DescricaoEstado });
         }
     }
 }

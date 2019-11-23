@@ -1,32 +1,31 @@
 ﻿@model ControlePatrimonios.Models.TbEstado
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar";
 }
 
-<h2>Edit</h2>
-
-<h4>TbEstado</h4>
+<h2>Editar Estado</h2>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdEstado" />
-            <div class="form-group">
-                <label asp-for="DescricaoEstado" class="control-label"></label>
-                <input asp-for="DescricaoEstado" class="form-control" />
-                <span asp-validation-for="DescricaoEstado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
+<div class="center">
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="IdEstado" />
+                <div class="form-group">
+                    <label asp-for="DescricaoEstado" class="control-label"></label>
+                    <input asp-for="DescricaoEstado" class="form-control" />
+                    <span asp-validation-for="DescricaoEstado" class="text-danger"></span>
+                </div>
+                <div class="form-group" align="right">
+                    <input type="submit" value="Salvar" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="col-md-offset-4 col-md-4">
+        <a asp-action="Index">Voltar para a lista</a>
+    </div>
 </div>
 
 @section Scripts {

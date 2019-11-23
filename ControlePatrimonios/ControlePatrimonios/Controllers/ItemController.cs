@@ -14,19 +14,17 @@ namespace ControlePatrimonios.Controllers
     {
         private readonly ControlePatrimoniosContext _context = new ControlePatrimoniosContext();
         
-        // GET: Item
         public async Task<IActionResult> Index(string searchString)
         {
-            //var controlePatrimoniosContext = _context.TbItem.Include(t => t.IdEstadoNavigation).Include(t => t.IdSetorNavigation).Include(t => t.IdTipoNavigation);
-            var itens = from a in _context.TbItem.Include(t => t.IdEstadoNavigation).Include(t => t.IdSetorNavigation).Include(t => t.IdTipoNavigation) select a;
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                itens = itens.Where(s => s.Descricao.Contains(searchString));
-            }
-            return View(await itens.ToListAsync());
+            var controlePatrimoniosContext = _context.TbItem.Include(t => t.IdEstadoNavigation).Include(t => t.IdSetorNavigation).Include(t => t.IdTipoNavigation);
+            //var itens = from a in _context.TbItem.Include(t => t.IdEstadoNavigation).Include(t => t.IdSetorNavigation).Include(t => t.IdTipoNavigation) select a;
+            //if (!String.IsNullOrEmpty(searchString))
+            //{
+            //    itens = itens.Where(s => s.Descricao.Contains(searchString));
+            //}
+            return View(await controlePatrimoniosContext.ToListAsync());
         }
-
-        // GET: Item/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -44,10 +42,22 @@ namespace ControlePatrimonios.Controllers
                 return NotFound();
             }
 
-            return View(tbItem);
+            return Json(new
+            {
+                success = true,
+                message = new
+                {
+                    patrimonio = tbItem.Patrimonio,
+                    serviceTag = tbItem.ServiceTag,
+                    descricao = tbItem.Descricao,
+                    dataCriacao = tbItem.DataCriacao.ToString("dd/MM/yyy"),
+                    descricaoEstado = tbItem.IdEstadoNavigation.DescricaoEstado,
+                    nomeSetor = tbItem.IdSetorNavigation.NomeSetor,
+                    descricaoTipo = tbItem.IdTipoNavigation.DescricaoTipo,
+                }
+            });
         }
-
-        // GET: Item/Create
+        
         public IActionResult Create()
         {
             ViewData["IdEstado"] = new SelectList(_context.TbEstado, "IdEstado", "DescricaoEstado");
@@ -55,10 +65,7 @@ namespace ControlePatrimonios.Controllers
             ViewData["IdTipo"] = new SelectList(_context.TbTipo, "IdTipo", "DescricaoTipo");
             return View();
         }
-
-        // POST: Item/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdItem,IdSetor,IdTipo,IdEstado,Patrimonio,ServiceTag,Descricao,DataCriacao")] TbItem tbItem)
@@ -75,8 +82,7 @@ namespace ControlePatrimonios.Controllers
             ViewData["IdTipo"] = new SelectList(_context.TbTipo, "IdTipo", "DescricaoTipo", tbItem.IdTipo);
             return View(tbItem);
         }
-
-        // GET: Item/Edit/5
+        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -94,10 +100,7 @@ namespace ControlePatrimonios.Controllers
             ViewData["IdTipo"] = new SelectList(_context.TbTipo, "IdTipo", "DescricaoTipo", tbItem.IdTipo);
             return View(tbItem);
         }
-
-        // POST: Item/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdItem,IdSetor,IdTipo,IdEstado,Patrimonio,ServiceTag,Descricao,DataCriacao")] TbItem tbItem)
@@ -132,31 +135,8 @@ namespace ControlePatrimonios.Controllers
             ViewData["IdTipo"] = new SelectList(_context.TbTipo, "IdTipo", "DescricaoTipo", tbItem.IdTipo);
             return View(tbItem);
         }
-
-        // GET: Item/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var tbItem = await _context.TbItem
-                .Include(t => t.IdEstadoNavigation)
-                .Include(t => t.IdSetorNavigation)
-                .Include(t => t.IdTipoNavigation)
-                .FirstOrDefaultAsync(m => m.IdItem == id);
-            if (tbItem == null)
-            {
-                return NotFound();
-            }
-
-            return View(tbItem);
-        }
-
-        // POST: Item/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        
+        [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var tbItem = await _context.TbItem.FindAsync(id);
@@ -168,6 +148,12 @@ namespace ControlePatrimonios.Controllers
         private bool TbItemExists(int id)
         {
             return _context.TbItem.Any(e => e.IdItem == id);
+        }
+
+        public async Task<IActionResult> GetDescricaoItemById(int id)
+        {
+            var tbItem = await _context.TbItem.FindAsync(id);
+            return Json(new { message = tbItem.Descricao });
         }
     }
 }

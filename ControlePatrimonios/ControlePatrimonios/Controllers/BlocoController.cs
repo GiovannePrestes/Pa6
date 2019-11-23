@@ -11,14 +11,12 @@ namespace ControlePatrimonios.Controllers
     public class BlocoController : Controller
     {
         private readonly ControlePatrimoniosContext _context = new ControlePatrimoniosContext();
-
-        // GET: Bloco
+        
         public async Task<IActionResult> Index()
         {
             return View(await _context.TbBloco.ToListAsync());
         }
-
-        // GET: Bloco/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,16 +33,12 @@ namespace ControlePatrimonios.Controllers
 
             return Json(new { success = true, message = tbBloco.NomeBloco });
         }
-
-        // GET: Bloco/Create
+        
         public IActionResult Create()
         {
             return View();
         }
-
-        // POST: Bloco/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdBloco,NomeBloco")] TbBloco tbBloco)
@@ -57,8 +51,7 @@ namespace ControlePatrimonios.Controllers
             }
             return View(tbBloco);
         }
-
-        // GET: Bloco/Edit/5
+        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,10 +66,7 @@ namespace ControlePatrimonios.Controllers
             }
             return View(tbBloco);
         }
-
-        // POST: Bloco/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdBloco,NomeBloco")] TbBloco tbBloco)
@@ -109,25 +99,6 @@ namespace ControlePatrimonios.Controllers
             return View(tbBloco);
         }
 
-        // GET: Bloco/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var tbBloco = await _context.TbBloco
-        //        .FirstOrDefaultAsync(m => m.IdBloco == id);
-        //    if (tbBloco == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(tbBloco);
-        //}
-
-        // POST: Bloco/Delete/5
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -140,6 +111,12 @@ namespace ControlePatrimonios.Controllers
         private bool TbBlocoExists(int id)
         {
             return _context.TbBloco.Any(e => e.IdBloco == id);
+        }
+
+        public async Task<IActionResult> GetNomeBlocoById(int id)
+        {
+            var tbBloco = await _context.TbBloco.FindAsync(id);
+            return Json(new { success = true, message = tbBloco.NomeBloco });
         }
     }
 }

@@ -15,15 +15,13 @@ namespace ControlePatrimonios.Controllers
     {
         private readonly ControlePatrimoniosContext _context = new ControlePatrimoniosContext();
         
-
-        // GET: Setor
+        
         public async Task<IActionResult> Index()
         {
             var controlePatrimoniosContext = _context.TbSetor.Include(t => t.IdBlocoNavigation);
             return View(await controlePatrimoniosContext.ToListAsync());
         }
-
-        // GET: Setor/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,17 +44,13 @@ namespace ControlePatrimonios.Controllers
                                             nomeBloco = tbSetor.IdBlocoNavigation.NomeBloco
                                         } });
         }
-
-        // GET: Setor/Create
+        
         public IActionResult Create()
         {
             ViewData["IdBloco"] = new SelectList(_context.TbBloco, "IdBloco", "NomeBloco");
             return View();
         }
-
-        // POST: Setor/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdSetor,NomeSetor,IdBloco")] TbSetor tbSetor)
@@ -70,8 +64,7 @@ namespace ControlePatrimonios.Controllers
             ViewData["IdBloco"] = new SelectList(_context.TbBloco, "IdBloco", "NomeBloco", tbSetor.IdBloco);
             return View(tbSetor);
         }
-
-        // GET: Setor/Edit/5
+        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -87,10 +80,7 @@ namespace ControlePatrimonios.Controllers
             ViewData["IdBloco"] = new SelectList(_context.TbBloco, "IdBloco", "NomeBloco", tbSetor.IdBloco);
             return View(tbSetor);
         }
-
-        // POST: Setor/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdSetor,NomeSetor,IdBloco")] TbSetor tbSetor)
@@ -124,26 +114,6 @@ namespace ControlePatrimonios.Controllers
             return View(tbSetor);
         }
 
-        // GET: Setor/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var tbSetor = await _context.TbSetor
-        //        .Include(t => t.IdBlocoNavigation)
-        //        .FirstOrDefaultAsync(m => m.IdSetor == id);
-        //    if (tbSetor == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(tbSetor);
-        //}
-
-        // POST: Setor/Delete/5
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

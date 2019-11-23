@@ -4,74 +4,149 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Itens</h2>
+<div class="row">
+    <div class=" col-md-12">
+        <div align="right">
+            <button class="btn btn-primary" onclick="onClickCriar()">Criar novo item</button>
+        </div>
+        <hr />
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr class="bg-primary">
+                    <th>
+                        @Html.DisplayNameFor(model => model.Patrimonio)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ServiceTag)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Descricao)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DataCriacao)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IdEstadoNavigation)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IdSetorNavigation)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IdTipoNavigation)
+                    </th>
+                    <th width="275"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Patrimonio)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ServiceTag)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Descricao)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DataCriacao)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdEstadoNavigation.DescricaoEstado)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdSetorNavigation.NomeSetor)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdTipoNavigation.DescricaoTipo)
+                        </td>
+                        <td align="right">
+                            <button class="btn" onclick="Edit(@item.IdItem)">Editar</button> |
+                            <button class="btn" onclick="Details(@item.IdItem)">Detalhes</button> |
+                            <button class="btn" onclick="Delete(@item.IdItem)">Excluir</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@*<form asp-controller="Item" asp-action="Index" method="get">
+        <p>
+            Filtro Descrição: <input type="text" name="searchString">
+            <input type="submit" value="Filtrar" />
+        </p>
+    </form>*@
 
-<p>
-    <a asp-action="Create">Novo Item</a>
-</p>
-<form asp-controller="Item" asp-action="Index" method="get">
-    <p>
-        Filtro Descrição: <input type="text" name="searchString">
-        <input type="submit" value="Filtrar" />
-    </p>
-</form>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Patrimonio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ServiceTag)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descricao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataCriacao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdEstadoNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdSetorNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdTipoNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Patrimonio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ServiceTag)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataCriacao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdEstadoNavigation.DescricaoEstado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdSetorNavigation.NomeSetor)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdTipoNavigation.DescricaoTipo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdItem">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdItem">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdItem">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<script>
+    function onClickCriar() {
+        window.location.href = "./Item/Create";
+    }
+    function Edit(ItemId) {
+        window.location.href = "./Item/Edit/" + ItemId;
+    }
+    function Details(ItemId) {
+        $.get("./Item/Details",
+            {
+                id: ItemId
+            })
+            .done(function (result) {
+                if (result.success)
+                    swal({
+                        title: "Detalhes",
+                        text: 
+                                "Patrimonio: "              + result.message.patrimonio      +
+                                "\nService Tag: "           + result.message.serviceTag      +
+                                "\nDescrição: "             + result.message.descricao       +
+                                "\nData da Criação: "       + result.message.dataCriacao     +
+                                "\nDescrição do Estado: "   + result.message.descricaoEstado +
+                                "\nNome do Setor: "         + result.message.nomeSetor       +
+                                "\nDescrição do Tipo: "     + result.message.descricaoTipo,
+                        icon: "success"
+                    });
+            });
+    }
+    function Delete(ItemId) {
+        $.get("./Item/GetDescricaoItemById",
+            {
+                id: ItemId
+            })
+            .done(function (resultNomeItem) {
+                swal({
+                    title: "Tem certeza?",
+                    text: "Você irá excluir o Item: '" + resultNomeItem.message + "'",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((excluir) => {
+                        if (excluir) {
+                            $.post("./Item/DeleteConfirmed",
+                                {
+                                    id: ItemId
+                                })
+                                .done(function (result) {
+                                    if (result.success)
+                                        swal({
+                                            title: "Item '" + result.message + "' deletado com sucesso",
+                                            icon: "success"
+                                        }).then(() => {
+                                            window.location.reload();
+                                        });
+                                })
+                                .fail(function () {
+                                    swal("", "Algo deu errado", "error")
+                                });
+                        } else {
+                            swal({ title: "Item: '" + resultNomeItem.message + "' não deletado" });
+                        }
+                    });
+            });
+
+    }
+</script>
+
