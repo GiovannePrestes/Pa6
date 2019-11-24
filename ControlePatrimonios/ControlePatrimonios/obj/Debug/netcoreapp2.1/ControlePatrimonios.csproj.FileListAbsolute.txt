@@ -149,8 +149,6 @@ C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\ob
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\Razor\Views\Item\Edit.g.cshtml.cs
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\Razor\Views\Item\Index.g.cshtml.cs
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\Razor\Views\Encerramento\Create.g.cshtml.cs
-C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\Razor\Views\Encerramento\Delete.g.cshtml.cs
-C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\Razor\Views\Encerramento\Details.g.cshtml.cs
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\Razor\Views\Encerramento\Edit.g.cshtml.cs
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\Razor\Views\Encerramento\Index.g.cshtml.cs
 C:\Users\Giovanne Prestes\Desktop\Pa6\ControlePatrimonios\ControlePatrimonios\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -14,15 +13,13 @@ namespace ControlePatrimonios.Controllers
     public class EncerramentoController : Controller
     {
         private readonly ControlePatrimoniosContext _context = new ControlePatrimoniosContext();        
-
-        // GET: Encerramento
+        
         public async Task<IActionResult> Index()
         {
             var controlePatrimoniosContext = _context.TbEncerramento.Include(t => t.IdItemNavigation);
             return View(await controlePatrimoniosContext.ToListAsync());
         }
-
-        // GET: Encerramento/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -38,19 +35,15 @@ namespace ControlePatrimonios.Controllers
                 return NotFound();
             }
 
-            return View(tbEncerramento);
+            return Json(new { success = true, message = tbEncerramento.IdItemNavigation.NomeItem });
         }
-
-        // GET: Encerramento/Create
+        
         public IActionResult Create()
         {
-            ViewData["IdItem"] = new SelectList(_context.TbItem, "IdItem", "Descricao");
+            ViewData["IdItem"] = new SelectList(_context.TbItem, "IdItem", "NomeItem");
             return View();
         }
-
-        // POST: Encerramento/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdEncerramento,IdItem,DataEncerramento,Motivo")] TbEncerramento tbEncerramento)
@@ -62,11 +55,10 @@ namespace ControlePatrimonios.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdItem"] = new SelectList(_context.TbItem, "IdItem", "Descricao", tbEncerramento.IdItem);
+            ViewData["IdItem"] = new SelectList(_context.TbItem, "IdItem", "NomeItem", tbEncerramento.IdItem);
             return View(tbEncerramento);
         }
-
-        // GET: Encerramento/Edit/5
+        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -79,13 +71,10 @@ namespace ControlePatrimonios.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdItem"] = new SelectList(_context.TbItem, "IdItem", "Descricao", tbEncerramento.IdItem);
+            ViewData["IdItem"] = new SelectList(_context.TbItem, "IdItem", "NomeItem", tbEncerramento.IdItem);
             return View(tbEncerramento);
         }
-
-        // POST: Encerramento/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdEncerramento,IdItem,DataEncerramento,Motivo")] TbEncerramento tbEncerramento)
@@ -115,43 +104,32 @@ namespace ControlePatrimonios.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdItem"] = new SelectList(_context.TbItem, "IdItem", "Descricao", tbEncerramento.IdItem);
+            ViewData["IdItem"] = new SelectList(_context.TbItem, "IdItem", "NomeItem", tbEncerramento.IdItem);
             return View(tbEncerramento);
         }
-
-        // GET: Encerramento/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var tbEncerramento = await _context.TbEncerramento
-                .Include(t => t.IdItemNavigation)
-                .FirstOrDefaultAsync(m => m.IdEncerramento == id);
-            if (tbEncerramento == null)
-            {
-                return NotFound();
-            }
-
-            return View(tbEncerramento);
-        }
-
-        // POST: Encerramento/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        
+        [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var tbEncerramento = await _context.TbEncerramento.FindAsync(id);
             _context.TbEncerramento.Remove(tbEncerramento);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = true, message = tbEncerramento.IdItemNavigation.NomeItem });
         }
 
         private bool TbEncerramentoExists(int id)
         {
             return _context.TbEncerramento.Any(e => e.IdEncerramento == id);
+        }
+
+        public async Task<IActionResult> GetNomeItemEncerramentoById(int id)
+        {
+            var tbEncerramento = await _context.TbEncerramento
+                .Include(t => t.IdItemNavigation)
+                .FirstOrDefaultAsync(m => m.IdEncerramento == id);
+            if (tbEncerramento != null)
+                return Json(new { success = true, message = tbEncerramento.IdItemNavigation.NomeItem });
+            return Json(new { success = false });
         }
     }
 }

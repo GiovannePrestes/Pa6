@@ -27,7 +27,7 @@ namespace ControlePatrimonios.Models
         [Required]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DataCriacao { get; set; }
-
+        public string NomeItem { get { return String.Format(this.Patrimonio.ToString() + " - " + this.Descricao); } }
         [Display(Name = "Estado")]
         public TbEstado IdEstadoNavigation { get; set; }
         [Display(Name = "Setor")]

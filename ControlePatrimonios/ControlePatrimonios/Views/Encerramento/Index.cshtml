@@ -1,47 +1,117 @@
 ﻿@model IEnumerable<ControlePatrimonios.Models.TbEncerramento>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Encerramentos";
 }
 
-<h2>Index</h2>
+<h2>Encerramentos</h2>
+<div class="row">
+    <div class="col-md-offset-1 col-md-10">
+        <div align="right">
+            <button class="btn btn-primary" onclick="onClickCriar()">Criar novo encerramento</button>
+        </div>
+        <hr />
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr class="bg-primary">
+                    <th>
+                        @Html.DisplayNameFor(model => model.DataEncerramento)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Motivo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IdItemNavigation)
+                    </th>
+                    <th width="275"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DataEncerramento)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Motivo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdItemNavigation.NomeItem)
+                        </td>
+                        <td align="right">
+                            <button class="btn" onclick="Edit(@item.IdEncerramento)">Editar</button> |
+                            <button class="btn" onclick="Details(@item.IdEncerramento)">Detalhes</button> |
+                            <button class="btn" onclick="Delete(@item.IdEncerramento)">Excluir</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DataEncerramento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Motivo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdItemNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataEncerramento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Motivo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdItemNavigation.Descricao)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdEncerramento">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdEncerramento">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdEncerramento">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<script>
+    function onClickCriar() {
+        window.location.href = "./Encerramento/Create";
+    }
+    function Edit(EncerramentoId) {
+        window.location.href = "./Encerramento/Edit/" + EncerramentoId;
+    }
+    function Details(EncerramentoId) {
+        $.get("./Encerramento/Details",
+            {
+                id: EncerramentoId
+            })
+            .done(function (result) {
+                if (result.success)
+                    swal({
+                        title: "Detalhes",
+                        text: "Item do Encerramento: '" + result.message + "'",
+                        icon: "success"
+                    });
+            });
+    }
+    function Delete(EncerramentoId) {
+        $.get("./Encerramento/GetNomeItemEncerramentoById",
+            {
+                id: EncerramentoId
+            })
+            .done(function (resultNomeEncerramento) {
+                if (resultNomeEncerramento.success) {
+                    swal({
+                        title: "Tem certeza?",
+                        text: "Você irá excluir o Encerramento do Item: '" + resultNomeEncerramento.message + "'",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                        .then((excluir) => {
+                            if (excluir) {
+                                $.post("./Encerramento/DeleteConfirmed",
+                                    {
+                                        id: EncerramentoId
+                                    })
+                                    .done(function (result) {
+                                        if (result.success)
+                                            swal({
+                                                title: "Encerramento do Item '" + result.message + "' deletado com sucesso",
+                                                icon: "success"
+                                            }).then(() => {
+                                                window.location.reload();
+                                            });
+                                    })
+                                    .fail(function () {
+                                        swal("", "Algo deu errado", "error")
+                                    });
+                            } else {
+                                swal({ title: "Encerramento do Item: '" + resultNomeEncerramento.message + "' não deletado" });
+                            }
+                        });
+                } else {
+                    swal("", "Erro ao encontrar Item", "error")
+                }
+            });
+
+    }
+</script>
