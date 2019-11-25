@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ControlePatrimonios.Models;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace ControlePatrimonios.Controllers
 {
@@ -45,6 +46,13 @@ namespace ControlePatrimonios.Controllers
         {
             if (ModelState.IsValid)
             {
+                foreach(var bloco in await _context.TbBloco.ToArrayAsync())
+                {
+                    if (bloco.NomeBloco.Equals(tbBloco.NomeBloco))
+                    {
+                        //
+                    }
+                }
                 _context.Add(tbBloco);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -100,9 +108,39 @@ namespace ControlePatrimonios.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var tbBloco = await _context.TbBloco.FindAsync(id);
+            try
+            {
+                _context.TbBloco.Remove(tbBloco);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = tbBloco.NomeBloco });
+            }
+            catch (Exception e)
+            {
+                return Json(new { success = false, message = tbBloco.NomeBloco });
+            }
+        }
+
+        [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var tbBloco = await _context.TbBloco.FindAsync(id);
+            foreach ( var tbSetor in await _context.TbSetor.ToListAsync())
+            {
+                if(tbBloco.IdBloco == tbSetor.IdBloco)
+                {
+                    _context.TbSetor.Remove(tbSetor);
+                    foreach(var tbItem in await _context.TbItem.ToListAsync())
+                    {
+                        if(tbSetor.IdSetor == tbItem.IdSetor)
+                        {
+                            _context.TbItem.Remove(tbItem);
+                        }
+                    }
+                }
+            }
             _context.TbBloco.Remove(tbBloco);
             await _context.SaveChangesAsync();
             return Json(new { success = true, message = tbBloco.NomeBloco });

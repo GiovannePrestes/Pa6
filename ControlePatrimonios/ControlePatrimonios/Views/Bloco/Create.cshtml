@@ -4,6 +4,11 @@
     ViewData["Title"] = "Criar";
 }
 
+@if (TempData["notification"] != null)
+{
+    @Html.Raw(TempData["notification"])
+}
+
 <h2>Criar Bloco</h2>
 <hr />
 <div class="center">

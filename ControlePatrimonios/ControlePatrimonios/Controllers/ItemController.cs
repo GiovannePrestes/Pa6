@@ -142,7 +142,7 @@ namespace ControlePatrimonios.Controllers
             var tbItem = await _context.TbItem.FindAsync(id);
             _context.TbItem.Remove(tbItem);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = true, message = tbItem.Descricao });
         }
 
         private bool TbItemExists(int id)

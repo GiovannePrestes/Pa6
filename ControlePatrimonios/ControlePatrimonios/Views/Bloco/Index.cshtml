@@ -71,22 +71,52 @@
                     text: "Você irá excluir o Bloco: '" + resultNomeBloco.message + "'",
                     icon: "warning",
                     buttons: true,
-                    dangerMode: true,
+                    dangerMode: true
                 })
                 .then((excluir) => {
                     if (excluir) {
-                        $.post("./Bloco/DeleteConfirmed",
+                        $.post("./Bloco/Delete",
                             {
                                 id: BlocoId
                             })
                             .done(function (result) {
-                                if (result.success)
+                                if (result.success) {
                                     swal({
                                         title: "Bloco '" + result.message + "' deletado com sucesso",
                                         icon: "success"
                                     }).then(() => {
                                         window.location.reload();
                                     });
+                                } else {
+                                    swal({
+                                        title: "Atenção!",
+                                        text: "O Bloco '" + result.message + "' tem objetos atrelados a ele, ao confirmar todos os objetos serão excluidos, deseja excluir mesmo assim?",
+                                        icon: "warning",
+                                        buttons: true,
+                                        dangerMode: true,
+                                    }).then((excluirMesmoAssim) =>
+                                    {
+                                        if (excluirMesmoAssim) {
+                                            $.post("./Bloco/DeleteConfirmed",
+                                                {
+                                                    id: BlocoId
+                                                })
+                                                .done(function (result) {
+                                                    if (result.success) {
+                                                        swal({
+                                                            text: "Bloco '" + result.message + "' deletado com sucesso",
+                                                            icon: "success"
+                                                        }).then(() => {
+                                                            window.location.reload();
+                                                        });
+                                                    }
+                                                })
+                                                .fail(function () {
+                                                    swal("", "Algo deu errado", "error")
+                                                });
+                                        }
+                                    });
+                                }
                             })
                             .fail(function () {
                                 swal("", "Algo deu errado", "error")

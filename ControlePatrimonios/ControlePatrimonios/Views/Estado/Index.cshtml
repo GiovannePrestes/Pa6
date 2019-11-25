@@ -48,7 +48,7 @@
         window.location.href = "./Estado/Edit/" + EstadoId;
     }
     function Details(EstadoId) {
-        $.get("./Estado/Details",
+        $.get("./Details/Estado",
             {
                 id: EstadoId
             })
@@ -72,30 +72,59 @@
                     text: "Você irá excluir o Estado: '" + resultNomeEstado.message + "'",
                     icon: "warning",
                     buttons: true,
-                    dangerMode: true,
+                    dangerMode: true
                 })
-                .then((excluir) => {
-                    if (excluir) {
-                        $.post("./Estado/DeleteConfirmed",
-                            {
-                                id: EstadoId
-                            })
-                            .done(function (result) {
-                                if (result.success)
-                                    swal({
-                                        title: "Estado '" + result.message + "' deletado com sucesso",
-                                        icon: "success"
-                                    }).then(() => {
-                                        window.location.reload();
-                                    });
-                            })
-                            .fail(function () {
-                                swal("", "Algo deu errado", "error")
-                            });
-                    } else {
-                        swal({ title: "Estado: '" + resultNomeEstado.message + "' não deletado"});
-                    }
-                });
+                    .then((excluir) => {
+                        if (excluir) {
+                            $.post("./Estado/Delete",
+                                {
+                                    id: EstadoId
+                                })
+                                .done(function (result) {
+                                    if (result.success) {
+                                        swal({
+                                            title: "Estado '" + result.message + "' deletado com sucesso",
+                                            icon: "success"
+                                        }).then(() => {
+                                            window.location.reload();
+                                        });
+                                    } else {
+                                        swal({
+                                            title: "Atenção!",
+                                            text: "O Estado '" + result.message + "' tem objetos atrelados a ele, ao confirmar todos os objetos serão excluidos, deseja excluir mesmo assim?",
+                                            icon: "warning",
+                                            buttons: true,
+                                            dangerMode: true,
+                                        }).then((excluirMesmoAssim) => {
+                                            if (excluirMesmoAssim) {
+                                                $.post("./Estado/DeleteConfirmed",
+                                                    {
+                                                        id: EstadoId
+                                                    })
+                                                    .done(function (result) {
+                                                        if (result.success) {
+                                                            swal({
+                                                                text: "Estado '" + result.message + "' deletado com sucesso",
+                                                                icon: "success"
+                                                            }).then(() => {
+                                                                window.location.reload();
+                                                            });
+                                                        }
+                                                    })
+                                                    .fail(function () {
+                                                        swal("", "Algo deu errado", "error")
+                                                    });
+                                            }
+                                        });
+                                    }
+                                })
+                                .fail(function () {
+                                    swal("", "Algo deu errado", "error")
+                                });
+                        } else {
+                            swal({ title: "Estado: '" + resultNomeEstado.message + "' não deletado" });
+                        }
+                    });
             });
 
     }

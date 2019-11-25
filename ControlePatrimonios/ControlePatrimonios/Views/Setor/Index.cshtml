@@ -79,34 +79,62 @@
             .done(function (resultNomeSetor) {
                 swal({
                     title: "Tem certeza?",
-                    text: "Você irá excluir o Setor: " + resultNomeSetor.message,
+                    text: "Você irá excluir o Setor: '" + resultNomeSetor.message + "'",
                     icon: "warning",
                     buttons: true,
-                    dangerMode: true,
-                    buttons: ["Não", "Sim"],
+                    dangerMode: true
                 })
-                .then((excluir) => {
-                    if (excluir) {
-                        $.post("./Setor/DeleteConfirmed",
-                            {
-                                id: SetorId
-                            })
-                            .done(function (result) {
-                                if (result.success)
-                                    swal({
-                                        title: "Bloco " + result.message + " deletado com sucesso",
-                                        icon: "success"
-                                    }).then(() => {
-                                        window.location.reload();
-                                    });
-                            })
-                            .fail(function () {
-                                swal("Ooops!", "Algo deu errado", "error")
-                            });
-                    } else {
-                        swal({text: "Bloco " + resultNomeSetor.message + " não foi deletado" });
-                    }
-                });
+                    .then((excluir) => {
+                        if (excluir) {
+                            $.post("./Setor/Delete",
+                                {
+                                    id: SetorId
+                                })
+                                .done(function (result) {
+                                    if (result.success) {
+                                        swal({
+                                            title: "Setor '" + result.message + "' deletado com sucesso",
+                                            icon: "success"
+                                        }).then(() => {
+                                            window.location.reload();
+                                        });
+                                    } else {
+                                        swal({
+                                            title: "Atenção!",
+                                            text: "O Setor '" + result.message + "' tem objetos atrelados a ele, ao confirmar todos os objetos serão excluidos, deseja excluir mesmo assim?",
+                                            icon: "warning",
+                                            buttons: true,
+                                            dangerMode: true,
+                                        }).then((excluirMesmoAssim) => {
+                                            if (excluirMesmoAssim) {
+                                                $.post("./Setor/DeleteConfirmed",
+                                                    {
+                                                        id: SetorId
+                                                    })
+                                                    .done(function (result) {
+                                                        if (result.success) {
+                                                            swal({
+                                                                text: "Setor '" + result.message + "' deletado com sucesso",
+                                                                icon: "success"
+                                                            }).then(() => {
+                                                                window.location.reload();
+                                                            });
+                                                        }
+                                                    })
+                                                    .fail(function () {
+                                                        swal("", "Algo deu errado", "error")
+                                                    });
+                                            }
+                                        });
+                                    }
+                                })
+                                .fail(function () {
+                                    swal("", "Algo deu errado", "error")
+                                });
+                        } else {
+                            swal({ title: "Setor: '" + resultNomeSetor.message + "' não deletado" });
+                        }
+                    });
             });
 
     }

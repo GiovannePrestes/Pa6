@@ -17,8 +17,6 @@ namespace ControlePatrimonios.Models
         public string NomeSetor { get; set; }
         [Required]
         public int IdBloco { get; set; }
-
-        [Required]
         [Display(Name = "Nome do Bloco")]
         public TbBloco IdBlocoNavigation { get; set; }
         public ICollection<TbItem> TbItem { get; set; }

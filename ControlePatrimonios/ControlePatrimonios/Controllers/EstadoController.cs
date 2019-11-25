@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ControlePatrimonios.Models;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace ControlePatrimonios.Controllers
 {
@@ -101,11 +99,34 @@ namespace ControlePatrimonios.Controllers
             }
             return View(tbEstado);
         }
-        
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var tbEstado = await _context.TbEstado.FindAsync(id);
+            try
+            {
+                _context.TbEstado.Remove(tbEstado);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = tbEstado.DescricaoEstado });
+            }
+            catch (Exception e)
+            {
+                return Json(new { success = false, message = tbEstado.DescricaoEstado });
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var tbEstado = await _context.TbEstado.FindAsync(id);
+            foreach (var tbItem in await _context.TbItem.ToListAsync())
+            {
+                if (tbEstado.IdEstado == tbItem.IdEstado)
+                {
+                    _context.TbItem.Remove(tbItem);
+                }
+            }
             _context.TbEstado.Remove(tbEstado);
             await _context.SaveChangesAsync();
             return Json(new { success = true, message = tbEstado.DescricaoEstado });

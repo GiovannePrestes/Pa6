@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Criar";
 }
-
 <h2>Criar Encerramento</h2>
 <hr />
 <div class="center">
@@ -13,7 +12,7 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="IdItemNavigation" class="control-label"></label>
-                    <select asp-for="IdItemNavigation" class="form-control" asp-items="ViewBag.IdItem"></select>
+                    <select asp-for="IdItem" class="form-control" asp-items="ViewBag.IdItem"></select>
                 </div>
                 <div class="form-group">
                     <label asp-for="Motivo" class="control-label"></label>

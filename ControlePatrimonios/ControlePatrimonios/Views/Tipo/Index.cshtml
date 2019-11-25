@@ -70,33 +70,62 @@
             .done(function (resultNomeTipo) {
                 swal({
                     title: "Tem certeza?",
-                    text: "Você irá excluir o Tipo: " + resultNomeTipo.message,
+                    text: "Você irá excluir o Tipo: '" + resultNomeTipo.message + "'",
                     icon: "warning",
                     buttons: true,
-                    dangerMode: true,
+                    dangerMode: true
                 })
-                .then((excluir) => {
-                    if (excluir) {
-                        $.post("./Tipo/DeleteConfirmed",
-                            {
-                                id: TipoId
-                            })
-                            .done(function (result) {
-                                if (result.success)
-                                    swal({
-                                        title: "Tipo " + result.message + " deletado com sucesso",
-                                        icon: "success"
-                                    }).then(() => {
-                                        window.location.reload();
-                                    });
-                            })
-                            .fail(function () {
-                                swal("", "Algo deu errado", "error")
-                            });
-                    } else {
-                        swal({ title: resultNomeTipo.message + " não deletado"});
-                    }
-                });
+                    .then((excluir) => {
+                        if (excluir) {
+                            $.post("./Tipo/Delete",
+                                {
+                                    id: TipoId
+                                })
+                                .done(function (result) {
+                                    if (result.success) {
+                                        swal({
+                                            title: "Tipo '" + result.message + "' deletado com sucesso",
+                                            icon: "success"
+                                        }).then(() => {
+                                            window.location.reload();
+                                        });
+                                    } else {
+                                        swal({
+                                            title: "Atenção!",
+                                            text: "O Tipo '" + result.message + "' tem objetos atrelados a ele, ao confirmar todos os objetos serão excluidos, deseja excluir mesmo assim?",
+                                            icon: "warning",
+                                            buttons: true,
+                                            dangerMode: true,
+                                        }).then((excluirMesmoAssim) => {
+                                            if (excluirMesmoAssim) {
+                                                $.post("./Tipo/DeleteConfirmed",
+                                                    {
+                                                        id: TipoId
+                                                    })
+                                                    .done(function (result) {
+                                                        if (result.success) {
+                                                            swal({
+                                                                text: "Tipo '" + result.message + "' deletado com sucesso",
+                                                                icon: "success"
+                                                            }).then(() => {
+                                                                window.location.reload();
+                                                            });
+                                                        }
+                                                    })
+                                                    .fail(function () {
+                                                        swal("", "Algo deu errado", "error")
+                                                    });
+                                            }
+                                        });
+                                    }
+                                })
+                                .fail(function () {
+                                    swal("", "Algo deu errado", "error")
+                                });
+                        } else {
+                            swal({ title: "Tipo: '" + resultNomeTipo.message + "' não deletado" });
+                        }
+                    });
             });
 
     }

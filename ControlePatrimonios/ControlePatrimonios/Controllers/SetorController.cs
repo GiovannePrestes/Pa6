@@ -115,9 +115,31 @@ namespace ControlePatrimonios.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var tbSetor = await _context.TbSetor.FindAsync(id);
+            try
+            {
+                _context.TbSetor.Remove(tbSetor);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = tbSetor.NomeSetor });
+            }catch(Exception e)
+            {
+                return Json(new { success = false, message = tbSetor.NomeSetor });
+            }
+        }
+
+        [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var tbSetor = await _context.TbSetor.FindAsync(id);
+            foreach(var tbItem in await _context.TbItem.ToListAsync())
+            {
+                if(tbSetor.IdSetor == tbItem.IdSetor)
+                {
+                    _context.TbItem.Remove(tbItem);
+                }
+            }
             _context.TbSetor.Remove(tbSetor);
             await _context.SaveChangesAsync();
             return Json(new { success = true, message = tbSetor.NomeSetor });
