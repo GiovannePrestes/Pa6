@@ -22,6 +22,10 @@
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Descricao)
+                        @*<form asp-controller="Item" asp-action="Index" method="get">
+                            <input class="label-primary" type="text" name="searchString">
+                            <input class="btn btn-primary" type="submit" value="Filtrar" />
+                        </form>*@
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.DataCriacao)
@@ -35,7 +39,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model.IdTipoNavigation)
                     </th>
-                    <th width="275"></th>
+                    <th width="175"></th>
                 </tr>
             </thead>
             <tbody>
@@ -65,8 +69,8 @@
                         </td>
                         <td align="right">
                             <button class="btn" onclick="Edit(@item.IdItem)">Editar</button> |
-                            <button class="btn" onclick="Details(@item.IdItem)">Detalhes</button> |
-                            <button class="btn" onclick="Delete(@item.IdItem)">Excluir</button>
+                            <button class="btn" onclick="Details(@item.IdItem)">Detalhes</button> @*|
+                            <button class="btn" onclick="Delete(@item.IdItem)">Excluir</button>*@
                         </td>
                     </tr>
                 }
@@ -74,12 +78,6 @@
         </table>
     </div>
 </div>
-@*<form asp-controller="Item" asp-action="Index" method="get">
-        <p>
-            Filtro Descrição: <input type="text" name="searchString">
-            <input type="submit" value="Filtrar" />
-        </p>
-    </form>*@
 
 
 <script>
@@ -98,14 +96,14 @@
                 if (result.success)
                     swal({
                         title: "Detalhes",
-                        text: 
-                                "Patrimonio: "              + result.message.patrimonio      +
-                                "\nService Tag: "           + result.message.serviceTag      +
-                                "\nDescrição: "             + result.message.descricao       +
-                                "\nData da Criação: "       + result.message.dataCriacao     +
-                                "\nDescrição do Estado: "   + result.message.descricaoEstado +
-                                "\nNome do Setor: "         + result.message.nomeSetor       +
-                                "\nDescrição do Tipo: "     + result.message.descricaoTipo,
+                        text:
+                            "Patrimonio: " + result.message.patrimonio +
+                            "\nService Tag: " + result.message.serviceTag +
+                            "\nDescrição: " + result.message.descricao +
+                            "\nData da Criação: " + result.message.dataCriacao +
+                            "\nDescrição do Estado: " + result.message.descricaoEstado +
+                            "\nNome do Setor: " + result.message.nomeSetor +
+                            "\nDescrição do Tipo: " + result.message.descricaoTipo,
                         icon: "success"
                     });
             });

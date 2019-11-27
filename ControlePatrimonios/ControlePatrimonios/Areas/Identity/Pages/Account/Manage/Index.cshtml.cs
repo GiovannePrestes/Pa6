@@ -44,7 +44,7 @@ namespace ControlePatrimonios.Areas.Identity.Pages.Account.Manage
             public string Email { get; set; }
 
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "Telefone")]
             public string PhoneNumber { get; set; }
         }
 
@@ -109,7 +109,7 @@ namespace ControlePatrimonios.Areas.Identity.Pages.Account.Manage
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "Seu perfil foi alterada.";
             return RedirectToPage();
         }
 
@@ -137,10 +137,10 @@ namespace ControlePatrimonios.Areas.Identity.Pages.Account.Manage
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
                 email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                "Confirme seu email",
+                $"Por favor confirme sua conta <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'> clicando aqui</a>.");
 
-            StatusMessage = "Verification email sent. Please check your email.";
+            StatusMessage = "Email de verificação enviado. Veja seu email.";
             return RedirectToPage();
         }
     }

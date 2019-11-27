@@ -16,13 +16,13 @@ namespace ControlePatrimonios.Controllers
         
         public async Task<IActionResult> Index(string searchString)
         {
-            var controlePatrimoniosContext = _context.TbItem.Include(t => t.IdEstadoNavigation).Include(t => t.IdSetorNavigation).Include(t => t.IdTipoNavigation);
-            //var itens = from a in _context.TbItem.Include(t => t.IdEstadoNavigation).Include(t => t.IdSetorNavigation).Include(t => t.IdTipoNavigation) select a;
+            //var controlePatrimoniosContext = _context.TbItem.Include(t => t.IdEstadoNavigation).Include(t => t.IdSetorNavigation).Include(t => t.IdTipoNavigation);
+            var itens = from a in _context.TbItem.Include(t => t.IdEstadoNavigation).Include(t => t.IdSetorNavigation).Include(t => t.IdTipoNavigation) select a;
             //if (!String.IsNullOrEmpty(searchString))
             //{
             //    itens = itens.Where(s => s.Descricao.Contains(searchString));
             //}
-            return View(await controlePatrimoniosContext.ToListAsync());
+            return View(await itens.ToListAsync());
         }
         
         public async Task<IActionResult> Details(int? id)

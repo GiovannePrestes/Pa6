@@ -23,7 +23,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model.IdItemNavigation)
                     </th>
-                    <th width="275"></th>
+                    <th width="175"></th>
                 </tr>
             </thead>
             <tbody>
@@ -41,8 +41,8 @@
                         </td>
                         <td align="right">
                             <button class="btn" onclick="Edit(@item.IdEncerramento)">Editar</button> |
-                            <button class="btn" onclick="Details(@item.IdEncerramento)">Detalhes</button> |
-                            <button class="btn" onclick="Delete(@item.IdEncerramento)">Excluir</button>
+                            <button class="btn" onclick="Details(@item.IdEncerramento)">Detalhes</button> @*|
+        <button class="btn" onclick="Delete(@item.IdEncerramento)">Excluir</button>*@
                         </td>
                     </tr>
                 }
