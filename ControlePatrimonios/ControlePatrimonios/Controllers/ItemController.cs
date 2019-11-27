@@ -70,16 +70,29 @@ namespace ControlePatrimonios.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdItem,IdSetor,IdTipo,IdEstado,Patrimonio,ServiceTag,Descricao,DataCriacao")] TbItem tbItem)
         {
+            bool exist = false;
             if (ModelState.IsValid)
             {
-                tbItem.DataCriacao = DateTime.Now;
-                _context.Add(tbItem);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                foreach (var item in await _context.TbItem.ToArrayAsync())
+                {
+                    if (item.Patrimonio.Equals(tbItem.Patrimonio) && item.ServiceTag.Equals(tbItem.ServiceTag))
+                    {
+                        exist = true;
+                    }
+                }
+                if (!exist)
+                {
+                    tbItem.DataCriacao = DateTime.Now;
+                    _context.Add(tbItem);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index)); 
+                }
             }
             ViewData["IdEstado"] = new SelectList(_context.TbEstado, "IdEstado", "DescricaoEstado", tbItem.IdEstado);
             ViewData["IdSetor"] = new SelectList(_context.TbSetor, "IdSetor", "NomeSetor", tbItem.IdSetor);
             ViewData["IdTipo"] = new SelectList(_context.TbTipo, "IdTipo", "DescricaoTipo", tbItem.IdTipo);
+
+            ModelState.AddModelError("Error", "Este Item ja existe!");
             return View(tbItem);
         }
         

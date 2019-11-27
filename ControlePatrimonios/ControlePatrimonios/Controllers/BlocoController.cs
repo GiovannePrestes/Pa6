@@ -12,12 +12,16 @@ namespace ControlePatrimonios.Controllers
     public class BlocoController : Controller
     {
         private readonly ControlePatrimoniosContext _context = new ControlePatrimoniosContext();
-        
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Index(string search)
         {
-            return View(await _context.TbBloco.ToListAsync());
+            var context = await _context.TbBloco.ToListAsync();
+            var list = from a in context select a;
+            if(!String.IsNullOrEmpty(search))
+                list = list.Where(t => t.NomeBloco.ToLower().Contains(search.ToLower()));
+            return View(list.ToList());
         }
-        
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,32 +38,37 @@ namespace ControlePatrimonios.Controllers
 
             return Json(new { success = true, message = tbBloco.NomeBloco });
         }
-        
+
         public IActionResult Create()
         {
             return View();
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdBloco,NomeBloco")] TbBloco tbBloco)
         {
+            bool exist = false;
             if (ModelState.IsValid)
             {
-                foreach(var bloco in await _context.TbBloco.ToArrayAsync())
+                foreach (var bloco in await _context.TbBloco.ToArrayAsync())
                 {
-                    if (bloco.NomeBloco.Equals(tbBloco.NomeBloco))
+                    if (bloco.NomeBloco.ToLower().Equals(tbBloco.NomeBloco.ToLower()))
                     {
-                        //
+                        exist = true;
                     }
                 }
-                _context.Add(tbBloco);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (!exist)
+                {
+                    _context.Add(tbBloco);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
+            ModelState.AddModelError("Error", "Este Bloco ja existe!");
             return View(tbBloco);
         }
-        
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,7 +83,7 @@ namespace ControlePatrimonios.Controllers
             }
             return View(tbBloco);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdBloco,NomeBloco")] TbBloco tbBloco)
@@ -127,14 +136,14 @@ namespace ControlePatrimonios.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var tbBloco = await _context.TbBloco.FindAsync(id);
-            foreach ( var tbSetor in await _context.TbSetor.ToListAsync())
+            foreach (var tbSetor in await _context.TbSetor.ToListAsync())
             {
-                if(tbBloco.IdBloco == tbSetor.IdBloco)
+                if (tbBloco.IdBloco == tbSetor.IdBloco)
                 {
                     _context.TbSetor.Remove(tbSetor);
-                    foreach(var tbItem in await _context.TbItem.ToListAsync())
+                    foreach (var tbItem in await _context.TbItem.ToListAsync())
                     {
-                        if(tbSetor.IdSetor == tbItem.IdSetor)
+                        if (tbSetor.IdSetor == tbItem.IdSetor)
                         {
                             _context.TbItem.Remove(tbItem);
                         }

@@ -3,6 +3,13 @@
 @{
     ViewData["Title"] = "Criar";
 }
+
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState["Error"].Errors.Count > 0)
+{
+    <script>
+        swal('@ViewData.ModelState["Error"].Errors.First().ErrorMessage', '', 'warning');
+    </script>
+}
 <h2>Criar Encerramento</h2>
 <hr />
 <div class="center">

@@ -14,9 +14,13 @@ namespace ControlePatrimonios.Controllers
         private readonly ControlePatrimoniosContext _context = new ControlePatrimoniosContext();
         
         
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
-            return View(await _context.TbEstado.ToListAsync());
+            var context = await _context.TbEstado.ToListAsync();
+            var list = from a in context select a;
+            if (!String.IsNullOrEmpty(search))
+                list = list.Where(t => t.DescricaoEstado.ToLower().Contains(search.ToLower()));
+            return View(list.ToList());
         }
         
         public async Task<IActionResult> Details(int? id)
@@ -44,12 +48,24 @@ namespace ControlePatrimonios.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdEstado,DescricaoEstado")] TbEstado tbEstado)
         {
+            bool exist = false;
             if (ModelState.IsValid)
             {
-                _context.Add(tbEstado);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                foreach (var estado in await _context.TbEstado.ToArrayAsync())
+                {
+                    if (estado.DescricaoEstado.ToLower().Equals(tbEstado.DescricaoEstado.ToLower()))
+                    {
+                        exist = true;
+                    }
+                }
+                if (!exist)
+                {
+                    _context.Add(tbEstado);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index)); 
+                }
             }
+            ModelState.AddModelError("Error", "Este Estado ja existe!");
             return View(tbEstado);
         }
         

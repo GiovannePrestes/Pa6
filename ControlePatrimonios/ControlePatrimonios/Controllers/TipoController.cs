@@ -13,9 +13,13 @@ namespace ControlePatrimonios.Controllers
     {
         private readonly ControlePatrimoniosContext _context = new ControlePatrimoniosContext();
         
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
-            return View(await _context.TbTipo.ToListAsync());
+            var context = await _context.TbTipo.ToListAsync();
+            var list = from a in context select a;
+            if (!String.IsNullOrEmpty(search))
+                list = list.Where(t => t.DescricaoTipo.ToLower().Contains(search.ToLower()));
+            return View(list.ToList());
         }
         
         public async Task<IActionResult> Details(int? id)
@@ -43,12 +47,24 @@ namespace ControlePatrimonios.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdTipo,DescricaoTipo")] TbTipo tbTipo)
         {
+            bool exist = false;
             if (ModelState.IsValid)
             {
-                _context.Add(tbTipo);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                foreach (var tipo in await _context.TbTipo.ToArrayAsync())
+                {
+                    if (tipo.DescricaoTipo.Equals(tbTipo.DescricaoTipo))
+                    {
+                        exist = true;
+                    }
+                }
+                if (!exist)
+                {
+                    _context.Add(tbTipo);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index)); 
+                }
             }
+            ModelState.AddModelError("Error", "Este Tipo ja existe!");
             return View(tbTipo);
         }
         

@@ -16,6 +16,10 @@
                 <tr class="bg-primary">
                     <th>
                         @Html.DisplayNameFor(model => model.DescricaoEstado)
+                        <form asp-controller="Estado" asp-action="Index" method="get">
+                            <input class="label-primary" type="text" name="search">
+                            <input class="btn btn-primary" type="submit" value="Filtrar" />
+                        </form>
                     </th>
                     <th width="275"></th>
                 </tr>
@@ -48,7 +52,7 @@
         window.location.href = "./Estado/Edit/" + EstadoId;
     }
     function Details(EstadoId) {
-        $.get("./Details/Estado",
+        $.get("./Estado/Details",
             {
                 id: EstadoId
             })
@@ -56,7 +60,7 @@
                 if (result.success)
                     swal({
                         title: "Detalhes",
-                        text: "Descrição do Estado: " + result.message,
+                        text: "Nome do Estado: " + result.message,
                         icon: "success"
                     });
             });

@@ -16,6 +16,10 @@
                 <tr class="bg-primary">
                     <th>
                         @Html.DisplayNameFor(model => model.NomeSetor)
+                        <form asp-controller="Setor" asp-action="Index" method="get">
+                            <input class="label-primary" type="text" name="search">
+                            <input class="btn btn-primary" type="submit" value="Filtrar" />
+                        </form>
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.IdBlocoNavigation)
@@ -63,7 +67,7 @@
                 if (result.success)
                     swal({
                         title: "Detalhes",
-                        text: "Setor: " + result.message.nomeSetor + 
+                        text: "Setor: " + result.message.nomeSetor +
                             "\nBloco: " + result.message.nomeBloco,
                         icon: "success"
                     });

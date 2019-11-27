@@ -4,9 +4,11 @@
     ViewData["Title"] = "Criar";
 }
 
-@if (TempData["notification"] != null)
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState["Error"].Errors.Count > 0)
 {
-    @Html.Raw(TempData["notification"])
+    <script>
+        swal('@ViewData.ModelState["Error"].Errors.First().ErrorMessage', '', 'warning');
+    </script>
 }
 
 <h2>Criar Bloco</h2>

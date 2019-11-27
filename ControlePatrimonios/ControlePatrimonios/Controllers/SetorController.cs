@@ -16,10 +16,15 @@ namespace ControlePatrimonios.Controllers
         private readonly ControlePatrimoniosContext _context = new ControlePatrimoniosContext();
         
         
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
             var controlePatrimoniosContext = _context.TbSetor.Include(t => t.IdBlocoNavigation);
-            return View(await controlePatrimoniosContext.ToListAsync());
+            var itens = from a in controlePatrimoniosContext select a;
+            if (!String.IsNullOrEmpty(search))
+            {
+                itens = itens.Where(t => t.NomeSetor.ToLower().Contains(search.ToLower()));
+            }
+            return View(await itens.ToListAsync());
         }
         
         public async Task<IActionResult> Details(int? id)
@@ -55,13 +60,25 @@ namespace ControlePatrimonios.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdSetor,NomeSetor,IdBloco")] TbSetor tbSetor)
         {
+            bool exist = false;
             if (ModelState.IsValid)
             {
-                _context.Add(tbSetor);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                foreach (var setor in await _context.TbSetor.ToArrayAsync())
+                {
+                    if (setor.NomeSetor.ToLower().Equals(tbSetor.NomeSetor.ToLower()) && setor.IdBloco == tbSetor.IdBloco)
+                    {
+                        exist = true;
+                    }
+                }
+                if (!exist)
+                {
+                    _context.Add(tbSetor);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
             ViewData["IdBloco"] = new SelectList(_context.TbBloco, "IdBloco", "NomeBloco", tbSetor.IdBloco);
+            ModelState.AddModelError("Error", "Este Setor ja existe!");
             return View(tbSetor);
         }
         

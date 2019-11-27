@@ -16,6 +16,10 @@
                 <tr class="bg-primary">
                     <th>
                         @Html.DisplayNameFor(model => model.DescricaoTipo)
+                        <form asp-controller="Tipo" asp-action="Index" method="get">
+                            <input class="label-primary" type="text" name="search">
+                            <input class="btn btn-primary" type="submit" value="Filtrar" />
+                        </form>
                     </th>
                     <th width="275"></th>
                 </tr>

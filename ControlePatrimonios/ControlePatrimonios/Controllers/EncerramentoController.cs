@@ -14,10 +14,15 @@ namespace ControlePatrimonios.Controllers
     {
         private readonly ControlePatrimoniosContext _context = new ControlePatrimoniosContext();        
         
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
             var controlePatrimoniosContext = _context.TbEncerramento.Include(t => t.IdItemNavigation);
-            return View(await controlePatrimoniosContext.ToListAsync());
+            var itens = from a in controlePatrimoniosContext select a;
+            if (!String.IsNullOrEmpty(search))
+            {
+                itens = itens.Where(t=>t.IdItemNavigation.NomeItem.Contains(search));
+            }
+            return View(await itens.ToListAsync());
         }
         
         public async Task<IActionResult> Details(int? id)
@@ -48,14 +53,26 @@ namespace ControlePatrimonios.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdEncerramento,IdItem,DataEncerramento,Motivo")] TbEncerramento tbEncerramento)
         {
+            bool exist = false;
             if (ModelState.IsValid)
             {
-                tbEncerramento.DataEncerramento = DateTime.Now;
-                _context.Add(tbEncerramento);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                foreach (var encerramento in await _context.TbEncerramento.ToArrayAsync())
+                {
+                    if (encerramento.IdItem.Equals(tbEncerramento.IdItem))
+                    {
+                        exist = true;
+                    }
+                }
+                if (!exist)
+                {
+                    tbEncerramento.DataEncerramento = DateTime.Now;
+                    _context.Add(tbEncerramento);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index)); 
+                }
             }
             ViewData["IdItem"] = new SelectList(_context.TbItem, "IdItem", "NomeItem", tbEncerramento.IdItem);
+            ModelState.AddModelError("Error", "Este Encerramento ja existe!");
             return View(tbEncerramento);
         }
         
