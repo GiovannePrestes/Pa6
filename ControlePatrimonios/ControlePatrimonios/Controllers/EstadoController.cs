@@ -62,10 +62,11 @@ namespace ControlePatrimonios.Controllers
                 {
                     _context.Add(tbEstado);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index)); 
+                    ViewBag.Message = new Message("Estado", "Estado criado com Sucesso", "success");
+                    return View(tbEstado); 
                 }
             }
-            ModelState.AddModelError("Error", "Este Estado ja existe!");
+            ViewBag.Message = new Message("Falha", "Esta descriçao ja esta sendo usada por outro Estado", "warning");
             return View(tbEstado);
         }
         
@@ -95,10 +96,26 @@ namespace ControlePatrimonios.Controllers
 
             if (ModelState.IsValid)
             {
+                bool exist = false;
                 try
                 {
-                    _context.Update(tbEstado);
-                    await _context.SaveChangesAsync();
+                    foreach (var estado in await _context.TbEstado.ToArrayAsync())
+                    {
+                        if (estado.DescricaoEstado.ToLower().Equals(tbEstado.DescricaoEstado.ToLower()))
+                        {
+                            exist = true;
+                        }
+                    }
+                    if (!exist)
+                    {
+                        _context.Update(tbEstado);
+                        await _context.SaveChangesAsync();
+                        ViewBag.Message = new Message("Estado", "Estado editado com sucesso", "success");
+                    }
+                    else
+                    {
+                        ViewBag.Message = new Message("Estado", "Esta descriçao esta sendo usada por outro Estado", "warning");
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -111,8 +128,9 @@ namespace ControlePatrimonios.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return View(tbEstado);
             }
+            ViewBag.Message = new Message("Falha", "Erro ao editar Estado", "warning");
             return View(tbEstado);
         }
 
@@ -132,21 +150,21 @@ namespace ControlePatrimonios.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var tbEstado = await _context.TbEstado.FindAsync(id);
-            foreach (var tbItem in await _context.TbItem.ToListAsync())
-            {
-                if (tbEstado.IdEstado == tbItem.IdEstado)
-                {
-                    _context.TbItem.Remove(tbItem);
-                }
-            }
-            _context.TbEstado.Remove(tbEstado);
-            await _context.SaveChangesAsync();
-            return Json(new { success = true, message = tbEstado.DescricaoEstado });
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var tbEstado = await _context.TbEstado.FindAsync(id);
+        //    foreach (var tbItem in await _context.TbItem.ToListAsync())
+        //    {
+        //        if (tbEstado.IdEstado == tbItem.IdEstado)
+        //        {
+        //            _context.TbItem.Remove(tbItem);
+        //        }
+        //    }
+        //    _context.TbEstado.Remove(tbEstado);
+        //    await _context.SaveChangesAsync();
+        //    return Json(new { success = true, message = tbEstado.DescricaoEstado });
+        //}
 
         private bool TbEstadoExists(int id)
         {

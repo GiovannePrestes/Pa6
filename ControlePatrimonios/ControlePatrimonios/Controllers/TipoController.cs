@@ -61,10 +61,11 @@ namespace ControlePatrimonios.Controllers
                 {
                     _context.Add(tbTipo);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index)); 
+                    ViewBag.Message = new Message("Tipo", "Tipo criado com sucesso", "success");
+                    return View(tbTipo); 
                 }
             }
-            ModelState.AddModelError("Error", "Este Tipo ja existe!");
+            ViewBag.Message = new Message("Falha", "Descricao de Tipo ja existente", "warning");
             return View(tbTipo);
         }
         
@@ -94,10 +95,26 @@ namespace ControlePatrimonios.Controllers
 
             if (ModelState.IsValid)
             {
+                bool exist = false;
                 try
                 {
-                    _context.Update(tbTipo);
-                    await _context.SaveChangesAsync();
+                    foreach (var tipo in await _context.TbTipo.ToArrayAsync())
+                    {
+                        if (tipo.DescricaoTipo.Equals(tbTipo.DescricaoTipo))
+                        {
+                            exist = true;
+                        }
+                    }
+                    if (!exist)
+                    {
+                        _context.Update(tbTipo);
+                        await _context.SaveChangesAsync();
+                        ViewBag.Message = new Message("Tipo", "Tipo editado com sucesso", "success");
+                    }
+                    else
+                    {
+                        ViewBag.Message = new Message("Falha", "Esta descriçao ja esta sendo usada em outro Tipo", "warning");
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -110,8 +127,9 @@ namespace ControlePatrimonios.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return View(tbTipo);
             }
+            ViewBag.Message = new Message("Falha", "Falha ao editar Tipo", "warning");
             return View(tbTipo);
         }
 

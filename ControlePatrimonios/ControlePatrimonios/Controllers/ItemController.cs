@@ -85,14 +85,15 @@ namespace ControlePatrimonios.Controllers
                     tbItem.DataCriacao = DateTime.Now;
                     _context.Add(tbItem);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index)); 
+                    ViewBag.Message = new Message("Item", "Sucesso ao criar Item", "success");
+                    return View(tbItem);
                 }
             }
             ViewData["IdEstado"] = new SelectList(_context.TbEstado, "IdEstado", "DescricaoEstado", tbItem.IdEstado);
             ViewData["IdSetor"] = new SelectList(_context.TbSetor, "IdSetor", "NomeSetor", tbItem.IdSetor);
             ViewData["IdTipo"] = new SelectList(_context.TbTipo, "IdTipo", "DescricaoTipo", tbItem.IdTipo);
 
-            ModelState.AddModelError("Error", "Este Item ja existe!");
+            ViewBag.Message = new Message("Falha", "Este item ja existe", "warning");
             return View(tbItem);
         }
         
@@ -125,10 +126,26 @@ namespace ControlePatrimonios.Controllers
 
             if (ModelState.IsValid)
             {
+                bool exist = false;
                 try
                 {
-                    _context.Update(tbItem);
-                    await _context.SaveChangesAsync();
+                    foreach (var item in await _context.TbItem.ToArrayAsync())
+                    {
+                        if (item.Patrimonio.Equals(tbItem.Patrimonio) && item.ServiceTag.Equals(tbItem.ServiceTag))
+                        {
+                            exist = true;
+                        }
+                    }
+                    if (!exist)
+                    {
+                        _context.Update(tbItem);
+                        await _context.SaveChangesAsync();
+                        ViewBag.Message = new Message("Item", "Item editado com sucesso", "success");
+                    }
+                    else
+                    {
+                        ViewBag.Message = new Message("Item", "Este Item ja existe", "warning");
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -141,16 +158,17 @@ namespace ControlePatrimonios.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return View(tbItem);
             }
             ViewData["IdEstado"] = new SelectList(_context.TbEstado, "IdEstado", "DescricaoEstado", tbItem.IdEstado);
             ViewData["IdSetor"] = new SelectList(_context.TbSetor, "IdSetor", "NomeSetor", tbItem.IdSetor);
             ViewData["IdTipo"] = new SelectList(_context.TbTipo, "IdTipo", "DescricaoTipo", tbItem.IdTipo);
+            ViewBag.Message = new Message("Falha", "Erro ao editar Item", "warning");
             return View(tbItem);
         }
         
         [HttpPost]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var tbItem = await _context.TbItem.FindAsync(id);
             _context.TbItem.Remove(tbItem);

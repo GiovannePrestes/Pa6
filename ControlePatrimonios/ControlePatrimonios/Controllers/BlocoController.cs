@@ -61,11 +61,12 @@ namespace ControlePatrimonios.Controllers
                 if (!exist)
                 {
                     _context.Add(tbBloco);
+                    ViewBag.Message = new Message("Bloco", "O Bloco foi criado com sucesso", "success");
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
                 }
             }
-            ModelState.AddModelError("Error", "Este Bloco ja existe!");
+            if(exist)
+                ViewBag.Message = new Message("Error", "Este Bloco ja foi criado", "error");
             return View(tbBloco);
         }
 
@@ -95,10 +96,26 @@ namespace ControlePatrimonios.Controllers
 
             if (ModelState.IsValid)
             {
+                bool exist = false;
                 try
                 {
-                    _context.Update(tbBloco);
-                    await _context.SaveChangesAsync();
+                    foreach (var bloco in await _context.TbBloco.ToArrayAsync())
+                    {
+                        if (bloco.NomeBloco.ToLower().Equals(tbBloco.NomeBloco.ToLower()))
+                        {
+                            exist = true;
+                        }
+                    }
+                    if (!exist)
+                    {
+                        _context.Update(tbBloco);
+                        await _context.SaveChangesAsync();
+                        ViewBag.Message = new Message("Bloco", "O Bloco foi editado com sucesso", "success");
+                    }
+                    else
+                    {
+                        ViewBag.Message = new Message("Falha", "Este nome ja esta sendo usado em outro Bloco", "warning");
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -111,8 +128,9 @@ namespace ControlePatrimonios.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return View(tbBloco);
             }
+            ViewBag.Message = new Message("Erro", "Não foi possível editar este Bloco", "error");
             return View(tbBloco);
         }
 
@@ -132,28 +150,28 @@ namespace ControlePatrimonios.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var tbBloco = await _context.TbBloco.FindAsync(id);
-            foreach (var tbSetor in await _context.TbSetor.ToListAsync())
-            {
-                if (tbBloco.IdBloco == tbSetor.IdBloco)
-                {
-                    _context.TbSetor.Remove(tbSetor);
-                    foreach (var tbItem in await _context.TbItem.ToListAsync())
-                    {
-                        if (tbSetor.IdSetor == tbItem.IdSetor)
-                        {
-                            _context.TbItem.Remove(tbItem);
-                        }
-                    }
-                }
-            }
-            _context.TbBloco.Remove(tbBloco);
-            await _context.SaveChangesAsync();
-            return Json(new { success = true, message = tbBloco.NomeBloco });
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var tbBloco = await _context.TbBloco.FindAsync(id);
+        //    foreach (var tbSetor in await _context.TbSetor.ToListAsync())
+        //    {
+        //        if (tbBloco.IdBloco == tbSetor.IdBloco)
+        //        {
+        //            _context.TbSetor.Remove(tbSetor);
+        //            foreach (var tbItem in await _context.TbItem.ToListAsync())
+        //            {
+        //                if (tbSetor.IdSetor == tbItem.IdSetor)
+        //                {
+        //                    _context.TbItem.Remove(tbItem);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    _context.TbBloco.Remove(tbBloco);
+        //    await _context.SaveChangesAsync();
+        //    return Json(new { success = true, message = tbBloco.NomeBloco });
+        //}
 
         private bool TbBlocoExists(int id)
         {
@@ -166,4 +184,6 @@ namespace ControlePatrimonios.Controllers
             return Json(new { success = true, message = tbBloco.NomeBloco });
         }
     }
+
+    
 }

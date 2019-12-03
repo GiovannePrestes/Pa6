@@ -57,13 +57,13 @@
 
 <script>
     function onClickCriar() {
-        window.location.href = "./Encerramento/Create";
+        window.location.href = "@Url.Action("Create", "Encerramento")";
     }
     function Edit(EncerramentoId) {
-        window.location.href = "./Encerramento/Edit/" + EncerramentoId;
+        window.location.href = "@Url.Action("Edit", "Encerramento")/" + EncerramentoId;
     }
     function Details(EncerramentoId) {
-        $.get("./Encerramento/Details",
+        $.get("@Url.Action("Details", "Encerramento")",
             {
                 id: EncerramentoId
             })
@@ -77,7 +77,7 @@
             });
     }
     function Delete(EncerramentoId) {
-        $.get("./Encerramento/GetNomeItemEncerramentoById",
+        $.get("@Url.Action("GetNomeItemEncerramentoById", "Encerramento")",
             {
                 id: EncerramentoId
             })
@@ -92,7 +92,7 @@
                     })
                         .then((excluir) => {
                             if (excluir) {
-                                $.post("./Encerramento/DeleteConfirmed",
+                                $.post("@Url.Action("Delete", "Encerramento")",
                                     {
                                         id: EncerramentoId
                                     })

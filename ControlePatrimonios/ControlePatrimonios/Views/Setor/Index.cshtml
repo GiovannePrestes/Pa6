@@ -52,14 +52,14 @@
 
 <script>
     function onClickCriar() {
-        window.location.href = "./Setor/Create";
+        window.location.href = "@Url.Action("Create", "Setor")";
     }
     function Edit(SetorId) {
-        window.location.href = "./Setor/Edit/" + SetorId;
+        window.location.href = "@Url.Action("Create", "Setor")/" + SetorId;
     }
 
     function Details(SetorId) {
-        $.get("./Setor/Details",
+        $.get("@Url.Action("Details", "Setor")",
             {
                 id: SetorId
             })
@@ -76,7 +76,7 @@
 
 
     function Delete(SetorId) {
-        $.get("./Setor/GetNomeSetor",
+        $.get("@Url.Action("GetNomeSetor", "Setor")",
             {
                 id: SetorId
             })
@@ -90,7 +90,7 @@
                 })
                     .then((excluir) => {
                         if (excluir) {
-                            $.post("./Setor/Delete",
+                            $.post("@Url.Action("Delete", "Setor")",
                                 {
                                     id: SetorId
                                 })
@@ -105,30 +105,8 @@
                                     } else {
                                         swal({
                                             title: "Atenção!",
-                                            text: "O Setor '" + result.message + "' tem objetos atrelados a ele, ao confirmar todos os objetos serão excluidos, deseja excluir mesmo assim?",
-                                            icon: "warning",
-                                            buttons: true,
-                                            dangerMode: true,
-                                        }).then((excluirMesmoAssim) => {
-                                            if (excluirMesmoAssim) {
-                                                $.post("./Setor/DeleteConfirmed",
-                                                    {
-                                                        id: SetorId
-                                                    })
-                                                    .done(function (result) {
-                                                        if (result.success) {
-                                                            swal({
-                                                                text: "Setor '" + result.message + "' deletado com sucesso",
-                                                                icon: "success"
-                                                            }).then(() => {
-                                                                window.location.reload();
-                                                            });
-                                                        }
-                                                    })
-                                                    .fail(function () {
-                                                        swal("", "Algo deu errado", "error")
-                                                    });
-                                            }
+                                            text: "Não foi possivel excluir o Setor '" + result.message + "' pois existem objetos atrelados à ele",
+                                            icon: "warning"
                                         });
                                     }
                                 })

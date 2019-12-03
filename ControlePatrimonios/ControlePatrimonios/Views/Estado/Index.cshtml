@@ -46,13 +46,13 @@
 
 <script>
     function onClickCriar() {
-        window.location.href = "./Estado/Create";
+        window.location.href = "@Url.Action("Create", "Estado")";
     }
     function Edit(EstadoId) {
-        window.location.href = "./Estado/Edit/" + EstadoId;
+        window.location.href = "@Url.Action("Edit", "Estado")/" + EstadoId;
     }
     function Details(EstadoId) {
-        $.get("./Estado/Details",
+        $.get("@Url.Action("Details", "Estado")",
             {
                 id: EstadoId
             })
@@ -61,12 +61,12 @@
                     swal({
                         title: "Detalhes",
                         text: "Nome do Estado: " + result.message,
-                        icon: "success"
+                        //icon: "success"
                     });
             });
     }
     function Delete(EstadoId) {
-        $.get("./Estado/GetDescricaoEstadoById",
+        $.get("@Url.Action("GetDescricaoEstadoById", "Estado")",
             {
                 id: EstadoId
             })
@@ -80,7 +80,7 @@
                 })
                     .then((excluir) => {
                         if (excluir) {
-                            $.post("./Estado/Delete",
+                            $.post("@Url.Action("Delete", "Estado")",
                                 {
                                     id: EstadoId
                                 })
@@ -95,30 +95,8 @@
                                     } else {
                                         swal({
                                             title: "Atenção!",
-                                            text: "O Estado '" + result.message + "' tem objetos atrelados a ele, ao confirmar todos os objetos serão excluidos, deseja excluir mesmo assim?",
-                                            icon: "warning",
-                                            buttons: true,
-                                            dangerMode: true,
-                                        }).then((excluirMesmoAssim) => {
-                                            if (excluirMesmoAssim) {
-                                                $.post("./Estado/DeleteConfirmed",
-                                                    {
-                                                        id: EstadoId
-                                                    })
-                                                    .done(function (result) {
-                                                        if (result.success) {
-                                                            swal({
-                                                                text: "Estado '" + result.message + "' deletado com sucesso",
-                                                                icon: "success"
-                                                            }).then(() => {
-                                                                window.location.reload();
-                                                            });
-                                                        }
-                                                    })
-                                                    .fail(function () {
-                                                        swal("", "Algo deu errado", "error")
-                                                    });
-                                            }
+                                            text: "Não foi possível excluir o Estado '" + result.message + "' pois existem objetos atrelados a ele",
+                                            icon: "warning"
                                         });
                                     }
                                 })

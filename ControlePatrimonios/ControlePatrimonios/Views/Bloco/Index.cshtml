@@ -2,8 +2,14 @@
 
 @{
     ViewData["Title"] = "Blocos";
+    var message = ViewBag.Message as ControlePatrimonios.Models.Message;
 }
-
+@if (ViewBag.Message != null)
+{
+    <script>
+        swal('@message.Title', '@message.Text', '@message.Icon');
+    </script>
+}
 <h2>Blocos</h2>
 <div class="row">
     <div class="col-md-offset-2 col-md-8">
@@ -45,10 +51,10 @@
 
 <script>
     function onClickCriar() {
-        window.location.href = "./Bloco/Create";
+        window.location.href = "@Url.Action("Create", "Bloco")";
     }
     function Edit(BlocoId) {
-        window.location.href = "./Bloco/Edit/" + BlocoId;
+        window.location.href = "@Url.Action("Edit", "Bloco")/" + BlocoId;
     }
     function Details(BlocoId) {
         $.get("./Bloco/Details",
@@ -59,8 +65,7 @@
                 if (result.success)
                     swal({
                         title: "Detalhes",
-                        text: "Nome do Bloco: " + result.message,
-                        icon: "success"
+                        text: "Nome do Bloco: " + result.message
                     });
             });
     }
@@ -94,30 +99,9 @@
                                     } else {
                                         swal({
                                             title: "Atenção!",
-                                            text: "O Bloco '" + result.message + "' tem objetos atrelados a ele, ao confirmar todos os objetos serão excluidos, deseja excluir mesmo assim?",
+                                            text: "Não foi possível excluir o Bloco '" + result.message + "' pois existem objetos atrelados à ele.",
                                             icon: "warning",
-                                            buttons: true,
-                                            dangerMode: true,
-                                        }).then((excluirMesmoAssim) => {
-                                            if (excluirMesmoAssim) {
-                                                $.post("./Bloco/DeleteConfirmed",
-                                                    {
-                                                        id: BlocoId
-                                                    })
-                                                    .done(function (result) {
-                                                        if (result.success) {
-                                                            swal({
-                                                                text: "Bloco '" + result.message + "' deletado com sucesso",
-                                                                icon: "success"
-                                                            }).then(() => {
-                                                                window.location.reload();
-                                                            });
-                                                        }
-                                                    })
-                                                    .fail(function () {
-                                                        swal("", "Algo deu errado", "error")
-                                                    });
-                                            }
+                                            dangerMode: true
                                         });
                                     }
                                 })

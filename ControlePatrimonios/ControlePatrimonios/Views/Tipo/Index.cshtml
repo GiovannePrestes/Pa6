@@ -47,13 +47,13 @@
 
 <script>
     function onClickCriar() {
-        window.location.href = "./Tipo/Create";
+        window.location.href = "@Url.Action("Create", "Tipo")";
     }
     function Edit(TipoId) {
-        window.location.href = "./Tipo/Edit/" + TipoId;
+        window.location.href = "@Url.Action("Edit", "Tipo")/" + TipoId;
     }
     function Details(TipoId) {
-        $.get("./Tipo/Details",
+        $.get("@Url.Action("Details", "Tipo")",
             {
                 id: TipoId
             })
@@ -67,7 +67,7 @@
             });
     }
     function Delete(TipoId) {
-        $.get("./Tipo/GetDescricaoTipoById",
+        $.get("@Url.Action("GetDescricaoTipoById", "Tipo")",
             {
                 id: TipoId
             })
@@ -81,7 +81,7 @@
                 })
                     .then((excluir) => {
                         if (excluir) {
-                            $.post("./Tipo/Delete",
+                            $.post("@Url.Action("Delete", "Tipo")",
                                 {
                                     id: TipoId
                                 })
@@ -96,30 +96,8 @@
                                     } else {
                                         swal({
                                             title: "Atenção!",
-                                            text: "O Tipo '" + result.message + "' tem objetos atrelados a ele, ao confirmar todos os objetos serão excluidos, deseja excluir mesmo assim?",
-                                            icon: "warning",
-                                            buttons: true,
-                                            dangerMode: true,
-                                        }).then((excluirMesmoAssim) => {
-                                            if (excluirMesmoAssim) {
-                                                $.post("./Tipo/DeleteConfirmed",
-                                                    {
-                                                        id: TipoId
-                                                    })
-                                                    .done(function (result) {
-                                                        if (result.success) {
-                                                            swal({
-                                                                text: "Tipo '" + result.message + "' deletado com sucesso",
-                                                                icon: "success"
-                                                            }).then(() => {
-                                                                window.location.reload();
-                                                            });
-                                                        }
-                                                    })
-                                                    .fail(function () {
-                                                        swal("", "Algo deu errado", "error")
-                                                    });
-                                            }
+                                            text: "Não foi possível excluir o Tipo '" + result.message + "' pois existem objetos atrelados a ele",
+                                            icon: "warning"
                                         });
                                     }
                                 })

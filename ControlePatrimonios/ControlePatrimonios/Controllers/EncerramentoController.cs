@@ -68,11 +68,12 @@ namespace ControlePatrimonios.Controllers
                     tbEncerramento.DataEncerramento = DateTime.Now;
                     _context.Add(tbEncerramento);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index)); 
+                    ViewBag.Message = new Message("Encerramento", "Sucesso ao criar encerramento", "success");
+                    return View(tbEncerramento); 
                 }
             }
             ViewData["IdItem"] = new SelectList(_context.TbItem, "IdItem", "NomeItem", tbEncerramento.IdItem);
-            ModelState.AddModelError("Error", "Este Encerramento ja existe!");
+            ViewBag.Message = new Message("Encerramento", "Este item já foi encerrado", "warning");
             return View(tbEncerramento);
         }
         
@@ -103,10 +104,26 @@ namespace ControlePatrimonios.Controllers
 
             if (ModelState.IsValid)
             {
+                bool exist = false;
                 try
                 {
-                    _context.Update(tbEncerramento);
-                    await _context.SaveChangesAsync();
+                    foreach (var encerramento in await _context.TbEncerramento.ToArrayAsync())
+                    {
+                        if (encerramento.IdItem.Equals(tbEncerramento.IdItem))
+                        {
+                            exist = true;
+                        }
+                    }
+                    if (!exist)
+                    {
+                        _context.Update(tbEncerramento);
+                        await _context.SaveChangesAsync();
+                        ViewBag.Message = new Message("Encerramento", "Encerramento editado com sucesso", "success");
+                    }
+                    else
+                    {
+                        ViewBag.Message = new Message("Encerramento", "Este item ja foi encerrado", "warning");
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -119,14 +136,15 @@ namespace ControlePatrimonios.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return View(tbEncerramento);
             }
             ViewData["IdItem"] = new SelectList(_context.TbItem, "IdItem", "NomeItem", tbEncerramento.IdItem);
+            ViewBag.Message = new Message("Falha", "Erro ao editar Encerramento", "warning");
             return View(tbEncerramento);
         }
         
         [HttpPost]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var tbEncerramento = await _context.TbEncerramento.FindAsync(id);
             _context.TbEncerramento.Remove(tbEncerramento);

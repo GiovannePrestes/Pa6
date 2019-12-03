@@ -82,13 +82,13 @@
 
 <script>
     function onClickCriar() {
-        window.location.href = "./Item/Create";
+        window.location.href = "@Url.Action("Create", "Item")";
     }
     function Edit(ItemId) {
-        window.location.href = "./Item/Edit/" + ItemId;
+        window.location.href = "@Url.Action("Edit", "Item")/" + ItemId;
     }
     function Details(ItemId) {
-        $.get("./Item/Details",
+        $.get("@Url.Action("Details", "Item")",
             {
                 id: ItemId
             })
@@ -109,7 +109,7 @@
             });
     }
     function Delete(ItemId) {
-        $.get("./Item/GetDescricaoItemById",
+        $.get("@Url.Action("GetDescricaoItemById", "Item")",
             {
                 id: ItemId
             })
@@ -123,7 +123,7 @@
                 })
                     .then((excluir) => {
                         if (excluir) {
-                            $.post("./Item/DeleteConfirmed",
+                            $.post("@Url.Action("Delete", "Item")",
                                 {
                                     id: ItemId
                                 })

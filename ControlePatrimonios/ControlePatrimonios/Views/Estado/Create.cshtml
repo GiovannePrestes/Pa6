@@ -2,13 +2,23 @@
 
 @{
     ViewData["Title"] = "Criar";
+    var message = ViewBag.Message as ControlePatrimonios.Models.Message;
 }
 
-@if (!ViewData.ModelState.IsValid && ViewData.ModelState["Error"].Errors.Count > 0)
+@if (message != null)
 {
-    <script>
-        swal('@ViewData.ModelState["Error"].Errors.First().ErrorMessage', '', 'warning');
-    </script>
+    @if (message.Icon.Equals("success"))
+    {
+        <script>
+        swal('@message.Title', '@message.Text', '@message.Icon').then(() => { window.location.href = "@Url.Action("Index", "Estado")"; });
+        </script>
+    }
+    else
+    {
+        <script>
+        swal('@message.Title', '@message.Text', '@message.Icon');
+        </script>
+    }
 }
 <h2>Criar Estado</h2>
 <hr />

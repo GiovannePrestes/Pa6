@@ -2,8 +2,23 @@
 
 @{
     ViewData["Title"] = "Edit";
+    var message = ViewBag.Message as ControlePatrimonios.Models.Message;
 }
-
+@if (message != null)
+{
+    @if (message.Icon.Equals("success"))
+    {
+        <script>
+        swal('@message.Title', '@message.Text', '@message.Icon').then(() => { window.location.href = "@Url.Action("Index", "Bloco")"; });
+        </script>
+    }
+    else
+    {
+        <script>
+        swal('@message.Title', '@message.Text', '@message.Icon');
+        </script>
+    }
+}
 <h2>Editar Bloco</h2>
 
 <hr />
