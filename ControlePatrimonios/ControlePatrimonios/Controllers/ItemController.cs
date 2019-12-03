@@ -131,7 +131,7 @@ namespace ControlePatrimonios.Controllers
                 {
                     foreach (var item in await _context.TbItem.ToArrayAsync())
                     {
-                        if (item.Patrimonio.Equals(tbItem.Patrimonio) && item.ServiceTag.Equals(tbItem.ServiceTag))
+                        if (item.Patrimonio.Equals(tbItem.Patrimonio) && item.ServiceTag.Equals(tbItem.ServiceTag) && item.IdItem != tbItem.IdItem)
                         {
                             exist = true;
                         }

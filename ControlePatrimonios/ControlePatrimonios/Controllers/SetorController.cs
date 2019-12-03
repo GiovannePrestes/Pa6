@@ -116,7 +116,7 @@ namespace ControlePatrimonios.Controllers
                 {
                     foreach (var setor in await _context.TbSetor.ToArrayAsync())
                     {
-                        if (setor.NomeSetor.ToLower().Equals(tbSetor.NomeSetor.ToLower()) && setor.IdBloco == tbSetor.IdBloco)
+                        if (setor.IdSetor != tbSetor.IdSetor && setor.NomeSetor.ToLower().Equals(tbSetor.NomeSetor.ToLower()) && setor.IdBloco == tbSetor.IdBloco)
                         {
                             exist = true;
                         }

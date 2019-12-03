@@ -100,7 +100,7 @@ namespace ControlePatrimonios.Controllers
                 {
                     foreach (var tipo in await _context.TbTipo.ToArrayAsync())
                     {
-                        if (tipo.DescricaoTipo.Equals(tbTipo.DescricaoTipo))
+                        if (tipo.DescricaoTipo.Equals(tbTipo.DescricaoTipo) && tipo.IdTipo != tbTipo.IdTipo)
                         {
                             exist = true;
                         }

@@ -53,7 +53,7 @@ namespace ControlePatrimonios.Controllers
             {
                 foreach (var bloco in await _context.TbBloco.ToArrayAsync())
                 {
-                    if (bloco.NomeBloco.ToLower().Equals(tbBloco.NomeBloco.ToLower()))
+                    if (bloco.NomeBloco.ToLower().Equals(tbBloco.NomeBloco.ToLower()) && bloco.IdBloco != tbBloco.IdBloco)
                     {
                         exist = true;
                     }

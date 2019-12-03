@@ -109,7 +109,7 @@ namespace ControlePatrimonios.Controllers
                 {
                     foreach (var encerramento in await _context.TbEncerramento.ToArrayAsync())
                     {
-                        if (encerramento.IdItem.Equals(tbEncerramento.IdItem))
+                        if (encerramento.IdItem.Equals(tbEncerramento.IdItem) && encerramento.IdEncerramento != tbEncerramento.IdEncerramento)
                         {
                             exist = true;
                         }

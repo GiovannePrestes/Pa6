@@ -101,7 +101,7 @@ namespace ControlePatrimonios.Controllers
                 {
                     foreach (var estado in await _context.TbEstado.ToArrayAsync())
                     {
-                        if (estado.DescricaoEstado.ToLower().Equals(tbEstado.DescricaoEstado.ToLower()))
+                        if (estado.DescricaoEstado.ToLower().Equals(tbEstado.DescricaoEstado.ToLower()) && estado.IdEstado != tbEstado.IdEstado)
                         {
                             exist = true;
                         }
