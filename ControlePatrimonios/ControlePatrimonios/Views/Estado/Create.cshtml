@@ -1,0 +1,49 @@
+﻿@model ControlePatrimonios.Models.TbEstado
+
+@{
+    ViewData["Title"] = "Criar";
+    var message = ViewBag.Message as ControlePatrimonios.Models.Message;
+}
+
+@if (message != null)
+{
+    @if (message.Icon.Equals("success"))
+    {
+        <script>
+        swal('@message.Title', '@message.Text', '@message.Icon').then(() => { window.location.href = "@Url.Action("Index", "Estado")"; });
+        </script>
+    }
+    else
+    {
+        <script>
+        swal('@message.Title', '@message.Text', '@message.Icon');
+        </script>
+    }
+}
+<h2>Criar Estado</h2>
+<hr />
+<div class="center">
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="DescricaoEstado" class="control-label"></label>
+                    <input asp-for="DescricaoEstado" class="form-control" />
+                    <span asp-validation-for="DescricaoEstado" class="text-danger"></span>
+                </div>
+                <div class="form-group" align="right">
+                    <input type="submit" value="Criar" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-offset-4 col-md-4">
+        <a asp-action="Index">Voltar para a lista</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

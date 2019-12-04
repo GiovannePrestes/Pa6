@@ -1,0 +1,50 @@
+﻿@model ControlePatrimonios.Models.TbTipo
+
+@{
+    ViewData["Title"] = "Editar";
+    var message = ViewBag.Message as ControlePatrimonios.Models.Message;
+}
+
+@if (message != null)
+{
+    @if (message.Icon.Equals("success"))
+    {
+        <script>
+        swal('@message.Title', '@message.Text', '@message.Icon').then(() => { window.location.href = "@Url.Action("Index", "Tipo")"; });
+        </script>
+    }
+    else
+    {
+        <script>
+        swal('@message.Title', '@message.Text', '@message.Icon');
+        </script>
+    }
+}
+<h2>Editar Tipo</h2>
+<hr />
+<div class="center">
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="IdTipo" />
+                <div class="form-group">
+                    <label asp-for="DescricaoTipo" class="control-label"></label>
+                    <input asp-for="DescricaoTipo" class="form-control" />
+                    <span asp-validation-for="DescricaoTipo" class="text-danger"></span>
+                </div>
+                <div class="form-group" align="right">
+                    <input type="submit" value="Salvar" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-offset-4 col-md-4">
+        <a asp-action="Index">Voltar para a lista</a>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

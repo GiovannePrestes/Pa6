@@ -1,0 +1,126 @@
+﻿@model IEnumerable<ControlePatrimonios.Models.TbSetor>
+
+@{
+    ViewData["Title"] = "Setores";
+}
+
+<h2>Setores</h2>
+<div class="row">
+    <div class="col-md-offset-2 col-md-8">
+        <div align="right">
+            <button class="btn btn-primary" onclick="onClickCriar()">Criar novo setor</button>
+        </div>
+        <hr />
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr class="bg-primary">
+                    <th>
+                        @Html.DisplayNameFor(model => model.NomeSetor)
+                        <form asp-controller="Setor" asp-action="Index" method="get">
+                            <input class="label-primary" type="text" name="search">
+                            <input class="btn btn-primary" type="submit" value="Filtrar" />
+                        </form>
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IdBlocoNavigation)
+                    </th>
+                    <th width="275"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NomeSetor)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdBlocoNavigation.NomeBloco)
+                        </td>
+                        <td>
+                            <button class="btn" onclick="Edit(@item.IdSetor)">Editar</button> |
+                            <button class="btn" onclick="Details(@item.IdSetor)">Detalhes</button> |
+                            <button class="btn" onclick="Delete(@item.IdSetor)">Excluir</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    function onClickCriar() {
+        window.location.href = "@Url.Action("Create", "Setor")";
+    }
+    function Edit(SetorId) {
+        window.location.href = "@Url.Action("Edit", "Setor")/" + SetorId;
+    }
+
+    function Details(SetorId) {
+        $.get("@Url.Action("Details", "Setor")",
+            {
+                id: SetorId
+            })
+            .done(function (result) {
+                if (result.success)
+                    swal({
+                        title: "Detalhes",
+                        text: "Setor: " + result.message.nomeSetor +
+                            "\nBloco: " + result.message.nomeBloco,
+                        icon: "success"
+                    });
+            });
+    }
+
+
+    function Delete(SetorId) {
+        $.get("@Url.Action("GetNomeSetor", "Setor")",
+            {
+                id: SetorId
+            })
+            .done(function (resultNomeSetor) {
+                swal({
+                    title: "Tem certeza?",
+                    text: "Você irá excluir o Setor: '" + resultNomeSetor.message + "'",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true
+                })
+                    .then((excluir) => {
+                        if (excluir) {
+                            $.post("@Url.Action("Delete", "Setor")",
+                                {
+                                    id: SetorId
+                                })
+                                .done(function (result) {
+                                    if (result.success) {
+                                        swal({
+                                            title: "Setor '" + result.message + "' deletado com sucesso",
+                                            icon: "success"
+                                        }).then(() => {
+                                            window.location.reload();
+                                        });
+                                    } else {
+                                        swal({
+                                            title: "Atenção!",
+                                            text: "Não foi possivel excluir o Setor '" + result.message + "' pois existem objetos atrelados à ele",
+                                            icon: "warning"
+                                        });
+                                    }
+                                })
+                                .fail(function () {
+                                    swal("", "Algo deu errado", "error")
+                                });
+                        } else {
+                            swal({ title: "Setor: '" + resultNomeSetor.message + "' não deletado" });
+                        }
+                    });
+            });
+
+    }
+
+
+</script>
+
