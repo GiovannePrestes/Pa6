@@ -48,25 +48,23 @@ namespace ControlePatrimonios.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdBloco,NomeBloco")] TbBloco tbBloco)
         {
-            bool exist = false;
             if (ModelState.IsValid)
             {
-                foreach (var bloco in await _context.TbBloco.ToArrayAsync())
-                {
-                    if (bloco.NomeBloco.ToLower().Equals(tbBloco.NomeBloco.ToLower()) && bloco.IdBloco != tbBloco.IdBloco)
-                    {
-                        exist = true;
-                    }
-                }
-                if (!exist)
+                if(Verifica(tbBloco))
                 {
                     _context.Add(tbBloco);
                     ViewBag.Message = new Message("Bloco", "O Bloco foi criado com sucesso", "success");
                     await _context.SaveChangesAsync();
                 }
+                else
+                {
+                    ViewBag.Message = new Message("Error", "Este Bloco ja foi criado", "warning");
+                }
             }
-            if(exist)
-                ViewBag.Message = new Message("Error", "Este Bloco ja foi criado", "error");
+            else
+            {
+                ViewBag.Message = new Message("Error", "Falha ao criar Bloco", "error");
+            }
             return View(tbBloco);
         }
 
@@ -96,17 +94,9 @@ namespace ControlePatrimonios.Controllers
 
             if (ModelState.IsValid)
             {
-                bool exist = false;
                 try
                 {
-                    foreach (var bloco in await _context.TbBloco.ToArrayAsync())
-                    {
-                        if (bloco.NomeBloco.ToLower().Equals(tbBloco.NomeBloco.ToLower()))
-                        {
-                            exist = true;
-                        }
-                    }
-                    if (!exist)
+                    if (Verifica(tbBloco))
                     {
                         _context.Update(tbBloco);
                         await _context.SaveChangesAsync();
@@ -128,9 +118,9 @@ namespace ControlePatrimonios.Controllers
                         throw;
                     }
                 }
-                return View(tbBloco);
             }
-            ViewBag.Message = new Message("Erro", "Não foi possível editar este Bloco", "error");
+            else
+                ViewBag.Message = new Message("Erro", "Não foi possível editar este Bloco", "error");
             return View(tbBloco);
         }
 
@@ -149,29 +139,7 @@ namespace ControlePatrimonios.Controllers
                 return Json(new { success = false, message = tbBloco.NomeBloco });
             }
         }
-
-        //[HttpPost]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var tbBloco = await _context.TbBloco.FindAsync(id);
-        //    foreach (var tbSetor in await _context.TbSetor.ToListAsync())
-        //    {
-        //        if (tbBloco.IdBloco == tbSetor.IdBloco)
-        //        {
-        //            _context.TbSetor.Remove(tbSetor);
-        //            foreach (var tbItem in await _context.TbItem.ToListAsync())
-        //            {
-        //                if (tbSetor.IdSetor == tbItem.IdSetor)
-        //                {
-        //                    _context.TbItem.Remove(tbItem);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    _context.TbBloco.Remove(tbBloco);
-        //    await _context.SaveChangesAsync();
-        //    return Json(new { success = true, message = tbBloco.NomeBloco });
-        //}
+        
 
         private bool TbBlocoExists(int id)
         {
@@ -182,6 +150,12 @@ namespace ControlePatrimonios.Controllers
         {
             var tbBloco = await _context.TbBloco.FindAsync(id);
             return Json(new { success = true, message = tbBloco.NomeBloco });
+        }
+
+        private bool Verifica(TbBloco tabela)
+        {
+            var aux = _context.TbBloco.Count(t => t.NomeBloco == tabela.NomeBloco && t.IdBloco != tabela.IdBloco);
+            return aux == 0 ? true : false;
         }
     }
 

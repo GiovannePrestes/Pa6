@@ -47,25 +47,23 @@ namespace ControlePatrimonios.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdTipo,DescricaoTipo")] TbTipo tbTipo)
         {
-            bool exist = false;
             if (ModelState.IsValid)
             {
-                foreach (var tipo in await _context.TbTipo.ToArrayAsync())
-                {
-                    if (tipo.DescricaoTipo.Equals(tbTipo.DescricaoTipo))
-                    {
-                        exist = true;
-                    }
-                }
-                if (!exist)
+                if (Verifica(tbTipo))
                 {
                     _context.Add(tbTipo);
                     await _context.SaveChangesAsync();
                     ViewBag.Message = new Message("Tipo", "Tipo criado com sucesso", "success");
-                    return View(tbTipo); 
+                }
+                else
+                {
+                    ViewBag.Message = new Message("Tipo", "Descricao de Tipo ja existente", "warning");
                 }
             }
-            ViewBag.Message = new Message("Falha", "Descricao de Tipo ja existente", "warning");
+            else
+            {
+                ViewBag.Message = new Message("Error", "Falha na criacao do Tipo", "error");
+            }
             return View(tbTipo);
         }
         
@@ -95,17 +93,9 @@ namespace ControlePatrimonios.Controllers
 
             if (ModelState.IsValid)
             {
-                bool exist = false;
                 try
                 {
-                    foreach (var tipo in await _context.TbTipo.ToArrayAsync())
-                    {
-                        if (tipo.DescricaoTipo.Equals(tbTipo.DescricaoTipo) && tipo.IdTipo != tbTipo.IdTipo)
-                        {
-                            exist = true;
-                        }
-                    }
-                    if (!exist)
+                    if (Verifica(tbTipo))
                     {
                         _context.Update(tbTipo);
                         await _context.SaveChangesAsync();
@@ -127,9 +117,11 @@ namespace ControlePatrimonios.Controllers
                         throw;
                     }
                 }
-                return View(tbTipo);
             }
-            ViewBag.Message = new Message("Falha", "Falha ao editar Tipo", "warning");
+            else
+            {
+                ViewBag.Message = new Message("Falha", "Falha ao editar Tipo", "warning");
+            }
             return View(tbTipo);
         }
 
@@ -174,6 +166,12 @@ namespace ControlePatrimonios.Controllers
         {
             var tbTipo = await _context.TbTipo.FindAsync(id);
             return Json(new { message = tbTipo.DescricaoTipo });
+        }
+
+        private bool Verifica(TbTipo tabela)
+        {
+            var aux = _context.TbTipo.Count(t => t.DescricaoTipo == tabela.DescricaoTipo && t.IdTipo != tabela.IdTipo);
+            return aux == 0 ? true : false;
         }
     }
 }

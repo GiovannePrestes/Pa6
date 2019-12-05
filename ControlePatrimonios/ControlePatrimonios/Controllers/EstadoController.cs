@@ -12,8 +12,8 @@ namespace ControlePatrimonios.Controllers
     public class EstadoController : Controller
     {
         private readonly ControlePatrimoniosContext _context = new ControlePatrimoniosContext();
-        
-        
+
+
         public async Task<IActionResult> Index(string search)
         {
             var context = await _context.TbEstado.ToListAsync();
@@ -22,7 +22,7 @@ namespace ControlePatrimonios.Controllers
                 list = list.Where(t => t.DescricaoEstado.ToLower().Contains(search.ToLower()));
             return View(list.ToList());
         }
-        
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -39,7 +39,7 @@ namespace ControlePatrimonios.Controllers
 
             return Json(new { success = true, message = tbEstado.DescricaoEstado });
         }
-        
+
         public IActionResult Create()
         {
             return View();
@@ -48,28 +48,27 @@ namespace ControlePatrimonios.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdEstado,DescricaoEstado")] TbEstado tbEstado)
         {
-            bool exist = false;
             if (ModelState.IsValid)
             {
-                foreach (var estado in await _context.TbEstado.ToArrayAsync())
-                {
-                    if (estado.DescricaoEstado.ToLower().Equals(tbEstado.DescricaoEstado.ToLower()))
-                    {
-                        exist = true;
-                    }
-                }
-                if (!exist)
+                if (Verifica(tbEstado))
                 {
                     _context.Add(tbEstado);
                     await _context.SaveChangesAsync();
                     ViewBag.Message = new Message("Estado", "Estado criado com Sucesso", "success");
-                    return View(tbEstado); 
+                    return View(tbEstado);
+                }
+                else
+                {
+                    ViewBag.Message = new Message("Estado", "Esta descriçao ja esta sendo usada por outro Estado", "warning");
                 }
             }
-            ViewBag.Message = new Message("Falha", "Esta descriçao ja esta sendo usada por outro Estado", "warning");
+            else
+            {
+                ViewBag.Message = new Message("Falha", "Falha ao criar Estado", "error");
+            }
             return View(tbEstado);
         }
-        
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,7 +83,7 @@ namespace ControlePatrimonios.Controllers
             }
             return View(tbEstado);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdEstado,DescricaoEstado")] TbEstado tbEstado)
@@ -96,17 +95,9 @@ namespace ControlePatrimonios.Controllers
 
             if (ModelState.IsValid)
             {
-                bool exist = false;
                 try
                 {
-                    foreach (var estado in await _context.TbEstado.ToArrayAsync())
-                    {
-                        if (estado.DescricaoEstado.ToLower().Equals(tbEstado.DescricaoEstado.ToLower()) && estado.IdEstado != tbEstado.IdEstado)
-                        {
-                            exist = true;
-                        }
-                    }
-                    if (!exist)
+                    if (Verifica(tbEstado))
                     {
                         _context.Update(tbEstado);
                         await _context.SaveChangesAsync();
@@ -128,9 +119,11 @@ namespace ControlePatrimonios.Controllers
                         throw;
                     }
                 }
-                return View(tbEstado);
             }
-            ViewBag.Message = new Message("Falha", "Erro ao editar Estado", "warning");
+            else
+            {
+                ViewBag.Message = new Message("Falha", "Erro ao editar Estado", "warning");
+            }
             return View(tbEstado);
         }
 
@@ -150,22 +143,6 @@ namespace ControlePatrimonios.Controllers
             }
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var tbEstado = await _context.TbEstado.FindAsync(id);
-        //    foreach (var tbItem in await _context.TbItem.ToListAsync())
-        //    {
-        //        if (tbEstado.IdEstado == tbItem.IdEstado)
-        //        {
-        //            _context.TbItem.Remove(tbItem);
-        //        }
-        //    }
-        //    _context.TbEstado.Remove(tbEstado);
-        //    await _context.SaveChangesAsync();
-        //    return Json(new { success = true, message = tbEstado.DescricaoEstado });
-        //}
-
         private bool TbEstadoExists(int id)
         {
             return _context.TbEstado.Any(e => e.IdEstado == id);
@@ -175,6 +152,12 @@ namespace ControlePatrimonios.Controllers
         {
             var tbEstado = await _context.TbEstado.FindAsync(id);
             return Json(new { message = tbEstado.DescricaoEstado });
+        }
+
+        private bool Verifica(TbEstado tabela)
+        {
+            var aux = _context.TbEstado.Count(t => t.DescricaoEstado == tabela.DescricaoEstado && t.IdEstado != tabela.IdEstado);
+            return aux == 0 ? true : false;
         }
     }
 }

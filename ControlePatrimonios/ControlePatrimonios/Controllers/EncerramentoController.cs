@@ -53,27 +53,25 @@ namespace ControlePatrimonios.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdEncerramento,IdItem,DataEncerramento,Motivo")] TbEncerramento tbEncerramento)
         {
-            bool exist = false;
             if (ModelState.IsValid)
             {
-                foreach (var encerramento in await _context.TbEncerramento.ToArrayAsync())
-                {
-                    if (encerramento.IdItem.Equals(tbEncerramento.IdItem))
-                    {
-                        exist = true;
-                    }
-                }
-                if (!exist)
+                if (Verifica(tbEncerramento))
                 {
                     tbEncerramento.DataEncerramento = DateTime.Now;
                     _context.Add(tbEncerramento);
                     await _context.SaveChangesAsync();
                     ViewBag.Message = new Message("Encerramento", "Sucesso ao criar encerramento", "success");
-                    return View(tbEncerramento); 
+                }
+                else
+                {
+                    ViewBag.Message = new Message("Encerramento", "Este item já foi encerrado", "warning");
                 }
             }
+            else
+            {
+                ViewBag.Message = new Message("Error", "Falha ao encerrar item", "error");
+            }
             ViewData["IdItem"] = new SelectList(_context.TbItem, "IdItem", "NomeItem", tbEncerramento.IdItem);
-            ViewBag.Message = new Message("Encerramento", "Este item já foi encerrado", "warning");
             return View(tbEncerramento);
         }
         
@@ -104,18 +102,11 @@ namespace ControlePatrimonios.Controllers
 
             if (ModelState.IsValid)
             {
-                bool exist = false;
                 try
                 {
-                    foreach (var encerramento in await _context.TbEncerramento.ToArrayAsync())
+                    if (Verifica(tbEncerramento))
                     {
-                        if (encerramento.IdItem.Equals(tbEncerramento.IdItem) && encerramento.IdEncerramento != tbEncerramento.IdEncerramento)
-                        {
-                            exist = true;
-                        }
-                    }
-                    if (!exist)
-                    {
+                        tbEncerramento.DataEncerramento = _context.TbEncerramento.Where(t => t.IdEncerramento == tbEncerramento.IdEncerramento).Select(t => t.DataEncerramento).First();
                         _context.Update(tbEncerramento);
                         await _context.SaveChangesAsync();
                         ViewBag.Message = new Message("Encerramento", "Encerramento editado com sucesso", "success");
@@ -136,20 +127,13 @@ namespace ControlePatrimonios.Controllers
                         throw;
                     }
                 }
-                return View(tbEncerramento);
+            }
+            else
+            {
+                ViewBag.Message = new Message("Error", "Falha ao editar Encerramento", "error");
             }
             ViewData["IdItem"] = new SelectList(_context.TbItem, "IdItem", "NomeItem", tbEncerramento.IdItem);
-            ViewBag.Message = new Message("Falha", "Erro ao editar Encerramento", "warning");
             return View(tbEncerramento);
-        }
-        
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var tbEncerramento = await _context.TbEncerramento.FindAsync(id);
-            _context.TbEncerramento.Remove(tbEncerramento);
-            await _context.SaveChangesAsync();
-            return Json(new { success = true, message = tbEncerramento.IdItemNavigation.NomeItem });
         }
 
         private bool TbEncerramentoExists(int id)
@@ -165,6 +149,13 @@ namespace ControlePatrimonios.Controllers
             if (tbEncerramento != null)
                 return Json(new { success = true, message = tbEncerramento.IdItemNavigation.NomeItem });
             return Json(new { success = false });
+        }
+
+        private bool Verifica(TbEncerramento tabela)
+        {
+            var aux = _context.TbEncerramento.Count(t => t.IdItem == tabela.IdItem
+                                            && t.IdEncerramento != tabela.IdEncerramento);
+            return aux == 0 ? true : false;
         }
     }
 }

@@ -60,27 +60,24 @@ namespace ControlePatrimonios.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdSetor,NomeSetor,IdBloco")] TbSetor tbSetor)
         {
-            bool exist = false;
             if (ModelState.IsValid)
             {
-                foreach (var setor in await _context.TbSetor.ToArrayAsync())
-                {
-                    if (setor.NomeSetor.ToLower().Equals(tbSetor.NomeSetor.ToLower()) && setor.IdBloco == tbSetor.IdBloco)
-                    {
-                        exist = true;
-                    }
-                }
-                if (!exist)
+                if (Verifica(tbSetor))
                 {
                     _context.Add(tbSetor);
                     await _context.SaveChangesAsync();
                     ViewBag.Message = new Message("Setor", "Setor criado com sucesso", "success");
-                    return View(tbSetor);
+                }
+                else
+                {
+                    ViewBag.Message = new Message("Setor", "Este Setor ja foi criado", "warning");
                 }
             }
+            else
+            {
+                ViewBag.Message = new Message("Error", "Nao foi possivel criar o Setor", "error");
+            }
             ViewData["IdBloco"] = new SelectList(_context.TbBloco, "IdBloco", "NomeBloco", tbSetor.IdBloco);
-            if(exist)
-                ViewBag.Message = new Message("Erro", "Nao foi possivel criar o Setor", "error");
             return View(tbSetor);
         }
         
@@ -111,21 +108,17 @@ namespace ControlePatrimonios.Controllers
 
             if (ModelState.IsValid)
             {
-                bool exist = false;
                 try
                 {
-                    foreach (var setor in await _context.TbSetor.ToArrayAsync())
-                    {
-                        if (setor.IdSetor != tbSetor.IdSetor && setor.NomeSetor.ToLower().Equals(tbSetor.NomeSetor.ToLower()) && setor.IdBloco == tbSetor.IdBloco)
-                        {
-                            exist = true;
-                        }
-                    }
-                    if (!exist)
+                    if (Verifica(tbSetor))
                     {
                         _context.Update(tbSetor);
                         await _context.SaveChangesAsync();
                         ViewBag.Message = new Message("Setor", "Setor editado com sucesso", "success");
+                    }
+                    else
+                    {
+                        ViewBag.Message = new Message("Setor", "Este setor ja foi criado", "warning");
                     }
                 }
                 catch (DbUpdateConcurrencyException)
@@ -139,10 +132,12 @@ namespace ControlePatrimonios.Controllers
                         throw;
                     }
                 }
-                return View(tbSetor);
+            }
+            else
+            {
+                ViewBag.Message = new Message("Error", "Não foi possivel editar o Setor", "error");
             }
             ViewData["IdBloco"] = new SelectList(_context.TbBloco, "IdBloco", "NomeBloco", tbSetor.IdBloco);
-            ViewBag.Message = new Message("Falha", "Não foi possivel editar o Setor", "warning");
             return View(tbSetor);
         }
 
@@ -161,22 +156,6 @@ namespace ControlePatrimonios.Controllers
             }
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var tbSetor = await _context.TbSetor.FindAsync(id);
-        //    foreach(var tbItem in await _context.TbItem.ToListAsync())
-        //    {
-        //        if(tbSetor.IdSetor == tbItem.IdSetor)
-        //        {
-        //            _context.TbItem.Remove(tbItem);
-        //        }
-        //    }
-        //    _context.TbSetor.Remove(tbSetor);
-        //    await _context.SaveChangesAsync();
-        //    return Json(new { success = true, message = tbSetor.NomeSetor });
-        //}
-
         private bool TbSetorExists(int id)
         {
             return _context.TbSetor.Any(e => e.IdSetor == id);
@@ -186,6 +165,14 @@ namespace ControlePatrimonios.Controllers
         {
             var tbSetor = await _context.TbSetor.FindAsync(id);
             return Json(new { message = tbSetor.NomeSetor });
+        }
+
+        private bool Verifica(TbSetor tabela)
+        {
+            var aux = _context.TbSetor.Count(t => t.NomeSetor == tabela.NomeSetor 
+                                            && t.IdBloco == tabela.IdBloco
+                                            && t.IdSetor != tabela.IdSetor);
+            return aux == 0 ? true : false;
         }
     }
 }

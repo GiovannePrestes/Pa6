@@ -16,12 +16,7 @@ namespace ControlePatrimonios.Controllers
         
         public async Task<IActionResult> Index(string searchString)
         {
-            //var controlePatrimoniosContext = _context.TbItem.Include(t => t.IdEstadoNavigation).Include(t => t.IdSetorNavigation).Include(t => t.IdTipoNavigation);
             var itens = from a in _context.TbItem.Include(t => t.IdEstadoNavigation).Include(t => t.IdSetorNavigation).Include(t => t.IdTipoNavigation) select a;
-            //if (!String.IsNullOrEmpty(searchString))
-            //{
-            //    itens = itens.Where(s => s.Descricao.Contains(searchString));
-            //}
             return View(await itens.ToListAsync());
         }
         
@@ -70,30 +65,27 @@ namespace ControlePatrimonios.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdItem,IdSetor,IdTipo,IdEstado,Patrimonio,ServiceTag,Descricao,DataCriacao")] TbItem tbItem)
         {
-            bool exist = false;
             if (ModelState.IsValid)
             {
-                foreach (var item in await _context.TbItem.ToArrayAsync())
-                {
-                    if (item.Patrimonio.Equals(tbItem.Patrimonio) && item.ServiceTag.Equals(tbItem.ServiceTag))
-                    {
-                        exist = true;
-                    }
-                }
-                if (!exist)
+                if (Verifica(tbItem))
                 {
                     tbItem.DataCriacao = DateTime.Now;
                     _context.Add(tbItem);
                     await _context.SaveChangesAsync();
                     ViewBag.Message = new Message("Item", "Sucesso ao criar Item", "success");
-                    return View(tbItem);
                 }
+                else
+                {
+                    ViewBag.Message = new Message("Falha", "Este item ja existe", "warning");
+                }
+            }
+            else
+            {
+                ViewBag.Message = new Message("Error", "Falha ao criar item", "error");
             }
             ViewData["IdEstado"] = new SelectList(_context.TbEstado, "IdEstado", "DescricaoEstado", tbItem.IdEstado);
             ViewData["IdSetor"] = new SelectList(_context.TbSetor, "IdSetor", "NomeSetor", tbItem.IdSetor);
             ViewData["IdTipo"] = new SelectList(_context.TbTipo, "IdTipo", "DescricaoTipo", tbItem.IdTipo);
-
-            ViewBag.Message = new Message("Falha", "Este item ja existe", "warning");
             return View(tbItem);
         }
         
@@ -126,18 +118,11 @@ namespace ControlePatrimonios.Controllers
 
             if (ModelState.IsValid)
             {
-                bool exist = false;
                 try
                 {
-                    foreach (var item in await _context.TbItem.ToArrayAsync())
+                    if (Verifica(tbItem))
                     {
-                        if (item.Patrimonio.Equals(tbItem.Patrimonio) && item.ServiceTag.Equals(tbItem.ServiceTag) && item.IdItem != tbItem.IdItem)
-                        {
-                            exist = true;
-                        }
-                    }
-                    if (!exist)
-                    {
+                        tbItem.DataCriacao = _context.TbItem.Where(t => t.IdItem == tbItem.IdItem).Select(t => t.DataCriacao).First();
                         _context.Update(tbItem);
                         await _context.SaveChangesAsync();
                         ViewBag.Message = new Message("Item", "Item editado com sucesso", "success");
@@ -158,12 +143,14 @@ namespace ControlePatrimonios.Controllers
                         throw;
                     }
                 }
-                return View(tbItem);
+            }
+            else
+            {
+                ViewBag.Message = new Message("Falha", "Erro ao editar Item", "warning");
             }
             ViewData["IdEstado"] = new SelectList(_context.TbEstado, "IdEstado", "DescricaoEstado", tbItem.IdEstado);
             ViewData["IdSetor"] = new SelectList(_context.TbSetor, "IdSetor", "NomeSetor", tbItem.IdSetor);
             ViewData["IdTipo"] = new SelectList(_context.TbTipo, "IdTipo", "DescricaoTipo", tbItem.IdTipo);
-            ViewBag.Message = new Message("Falha", "Erro ao editar Item", "warning");
             return View(tbItem);
         }
         
@@ -185,6 +172,14 @@ namespace ControlePatrimonios.Controllers
         {
             var tbItem = await _context.TbItem.FindAsync(id);
             return Json(new { message = tbItem.Descricao });
+        }
+
+        private bool Verifica(TbItem tabela)
+        {
+            var aux = _context.TbItem.Count(t => t.ServiceTag == tabela.ServiceTag
+                                            && t.Patrimonio == tabela.Patrimonio
+                                            && t.IdItem != tabela.IdItem);
+            return aux == 0 ? true : false;
         }
     }
 }
